@@ -31,13 +31,13 @@
             .tag {
                 @apply inline-block px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap;
             }
-            .tag-saas { @apply tag bg-blue-100 text-blue-800; }
-            .tag-cloud { @apply tag bg-purple-100 text-purple-800; }
-            .tag-enterprise { @apply tag bg-green-100 text-green-800; }
-            .tag-collab { @apply tag bg-yellow-100 text-yellow-800; }
-            .tag-crm { @apply tag bg-red-100 text-red-800; }
-            .tag-ai { @apply tag bg-indigo-100 text-indigo-800; }
-            .tag-method { @apply tag bg-gray-100 text-gray-800; }
+            .tag-saas { @apply tag bg-indigo-100 text-indigo-800; }
+            .tag-cloud { @apply tag bg-blue-100 text-blue-800; }
+            .tag-enterprise { @apply tag bg-red-100 text-red-800; }
+            .tag-collab { @apply tag bg-green-100 text-green-800; }
+            .tag-crm { @apply tag bg-orange-100 text-orange-800; }
+            .tag-ai { @apply tag bg-purple-100 text-purple-800; }
+            .tag-method { @apply tag bg-cyan-100 text-cyan-800; }
             
             /* 新增：导航栏选中状态 */
             .nav-link-active {
@@ -95,27 +95,31 @@
                 Welcome to runyee's blog
             </h2>
             <div class="space-y-2 text-gray-800">
-                <p class="leading-loose">从事B端产品工作5年，有0-1、1-N企业级产品设计经验。擅长复杂业务需求分析、产品架构设计、高质量方案编写与宣讲、客户沟通与关系维护。</p>
+                <p class="leading-loose">从事B端产品工作5年，有0-1、1-N企业级产品设计经验。擅长复杂业务需求分析、产品架构设计、高质量方案编写与宣讲、客户沟通与关系维护。客户沟通与关系维护。</p>
                 
                 <!-- 修改：个人简介标签展示 -->
-               <div class="flex items-center gap-2">  <!-- 新增flex布局 -->
-                    <p class="font">过往工作领域：</p>
-                    <div class="flex flex-wrap gap-4">
-                        <span class="tag-saas">SaaS</span>
-                        <span class="tag-cloud">云通信</span>
-                        <span class="tag-enterprise">企业信息化</span>
-                        <span class="tag-collab">协同办公</span>
-                    </div>
-                </div>
-                
-                <div class="flex items-center gap-2">  <!-- 新增flex布局 -->
-                    <p class="font">目前在研究：</p>
-                    <div class="flex flex-wrap gap-4 ">
-                        <span class="tag-crm">CRM</span>
-                        <span class="tag-ai">AI工具</span>
-                        <span class="tag-method">方法建模</span>
-                    </div>
-                </div>
+              <div class="space-y-4 mt-6">
+    <!-- 过往工作领域 -->
+  <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
+        <p class=" text-gray-700 min-w-[100px] sm:min-w-[120px]">过往工作领域：</p>
+        <div class="flex flex-wrap gap-2">
+            <span class="tag-saas">SaaS</span>
+            <span class="tag-cloud">云通信</span>
+            <span class="tag-enterprise">企业信息化</span>
+            <span class="tag-collab">协同办公</span>
+        </div>
+    </div>
+    
+    <!-- 目前在研究 -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
+        <p class=" text-gray-700 min-w-[100px] sm:min-w-[120px]">目前在研究：</p>
+        <div class="flex flex-wrap gap-2">
+            <span class="tag-crm">CRM</span>
+            <span class="tag-ai">AI工具</span>
+            <span class="tag-method">方法建模</span>
+        </div>
+    </div>
+</div>
             </div>
         </div>
     </section>
@@ -246,7 +250,7 @@
                 </div>
             </div>
             <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
-                <p>© 2023 pmrunyee Portfolio. All rights reserved.</p>
+                <p>© 2025 pmrunyee Portfolio. All rights reserved.</p>
             </div>
         </div>
     </footer>
