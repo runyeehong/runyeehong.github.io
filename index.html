@@ -94,11 +94,11 @@
             </div>
             
             <!-- 移动端菜单内容 -->
-            <div id="mobile-menu" class="md:hidden hidden">
+            <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg rounded-b-lg mt-1">
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-black bg-gray-100">主页</a>
-                    <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-50">作品</a>
-                    <a href="#blog" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-50">博客</a>
+                    <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0 outline-none">主页</a>
+                    <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0 outline-none">作品</a>
+                    <a href="#blog" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0 outline-none">博客</a>
                 </div>
             </div>
         </div>
@@ -108,13 +108,13 @@
     <section id="home" class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <!-- 头像和介绍 -->
         <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-            <div class="w-40 h-40 rounded-full bg-white p-1 border-4 border-white shadow-md">
+            <div class="w-40 h-40 rounded-full bg-white p-1 border-4 border-white shadow-md mx-auto md:mx-0">
                 <div class="w-full h-full rounded-full bg-gray-100 overflow-hidden">
                     <img src="assets/avater.jpg" alt="pmrunyee头像" class="w-full h-full object-cover">
                 </div>
             </div>
             
-            <div class="flex-1">
+            <div class="flex-1 text-center md:text-left">
                 <h1 class="text-3xl sm:text-4xl font-bold text-dark mb-3">pmrunyee</h1>
                 <p class="text-lg text-gray-400 mb-8">B2B产品经理,目前在研究CRM</p>
             </div>
@@ -290,7 +290,7 @@
             </div>
         </div>
     </footer>
-</body>
+
 <!-- 在页脚之后，body结束标签之前添加 -->
 <script>
     // 移动端菜单交互
@@ -306,7 +306,10 @@
             // 点击菜单项后自动关闭菜单
             const mobileMenuItems = mobileMenu.querySelectorAll('a');
             mobileMenuItems.forEach(item => {
-                item.addEventListener('click', function() {
+                item.addEventListener('click', function(e) {
+                    // 移除任何可能的焦点效果
+                    this.blur();
+                    // 立即隐藏菜单
                     mobileMenu.classList.add('hidden');
                 });
             });

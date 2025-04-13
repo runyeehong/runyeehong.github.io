@@ -165,9 +165,9 @@
         <div class="flex flex-col md:flex-row gap-8">
             <!-- 移动端目录 (默认隐藏) -->
             {% if page.toc %}
-            <div id="mobile-toc" class="md:hidden fixed inset-0 bg-black bg-opacity-30 z-50 hidden">
-                <div class="bg-white rounded-lg shadow-xl max-w-xs mx-auto mt-20 max-h-[70vh] overflow-y-auto">
-                    <div class="flex justify-between items-center p-4 border-b">
+            <div id="mobile-toc" class="md:hidden fixed inset-y-0 left-0 z-50 hidden w-3/4 max-w-xs">
+                <div class="bg-white shadow-xl h-full overflow-y-auto">
+                    <div class="flex justify-between items-center p-4 border-b sticky top-0 bg-white">
                         <h3 class="font-medium">文章目录</h3>
                         <button id="close-toc" class="text-gray-500">
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -175,6 +175,7 @@
                     </div>
                     <div class="p-4 toc-content"></div>
                 </div>
+                <div class="fixed inset-0 bg-black bg-opacity-30 -z-10"></div>
             </div>
             {% endif %}
             
@@ -247,112 +248,93 @@
             });
             
             // 关闭目录
-            if (closeToc) {
-                closeToc.addEventListener('click', function() {
-                    mobileToc.classList.add('hidden');
-                    document.body.style.overflow = '';
-                });
-            }
-            
-            // 点击目录外区域关闭目录
-            mobileToc.addEventListener('click', function(e) {
-                if (e.target === mobileToc) {
-                    mobileToc.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }
-            });
-            
-            // 点击目录项后关闭目录
-            const tocLinks = mobileToc.querySelectorAll('a');
-            tocLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileToc.classList.add('hidden');
-                    document.body.style.overflow = '';
-                });
+            closeToc.addEventListener('click', function() {
+                mobileToc.classList.add('hidden');
+                document.body.style.overflow = '';
             });
         }
-    });
-    
-    // 生成文章目录
-    function generateTableOfContents() {
-        const contentElement = document.querySelector('.prose');
-        const tocContents = document.querySelectorAll('.toc-content');
-        const tocButton = document.getElementById('toc-button');
         
-        if (contentElement && tocContents.length > 0) {
-            const headings = contentElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        // 生成文章目录
+        function generateTableOfContents() {
+            const headings = document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4');
+            const tocContents = document.querySelectorAll('.toc-content');
             
-            if (headings.length > 0) {
+            if (headings.length > 0 && tocContents.length > 0) {
                 const toc = document.createElement('ul');
-                toc.className = 'space-y-1 text-sm';
+                toc.className = 'space-y-2 text-sm';
                 
                 let currentLevel = 0;
                 let currentList = toc;
-                let listStack = [toc];
+                let lists = [toc];
                 
                 headings.forEach((heading, index) => {
                     // 获取标题级别
-                    const level = parseInt(heading.tagName.charAt(1));
+                    const level = parseInt(heading.tagName.substring(1)) - 1;
                     
-                    // 为标题添加ID，用于锚点链接
+                    // 创建目录项
+                    const item = document.createElement('li');
+                    
+                    // 创建链接
+                    const link = document.createElement('a');
+                    link.textContent = heading.textContent;
+                    link.href = '#' + (heading.id || `heading-${index}`);
+                    link.className = 'text-gray-700 hover:text-gray-900 hover:underline block py-1';
+                    
+                    // 如果标题没有ID，添加一个
                     if (!heading.id) {
                         heading.id = `heading-${index}`;
                     }
                     
-                    // 创建目录项
-                    const listItem = document.createElement('li');
-                    const link = document.createElement('a');
-                    link.href = `#${heading.id}`;
-                    link.textContent = heading.textContent;
-                    link.className = 'text-gray-700 hover:text-gray-900 hover:underline block py-1';
-                    
-                    // 根据标题级别添加缩进
-                    if (level > 1) {
-                        link.style.paddingLeft = `${(level - 1) * 0.75}rem`;
-                    }
-                    
-                    listItem.appendChild(link);
-                    
-                    // 处理嵌套列表
+                    // 根据标题级别设置缩进
                     if (level > currentLevel) {
                         // 创建新的子列表
                         const newList = document.createElement('ul');
-                        newList.className = 'pl-4 space-y-1';
-                        listStack[listStack.length - 1].lastChild.appendChild(newList);
-                        listStack.push(newList);
+                        newList.className = 'pl-4 space-y-1 mt-1';
+                        lists[currentLevel].lastChild.appendChild(newList);
+                        lists.push(newList);
                         currentList = newList;
+                        currentLevel = level;
                     } else if (level < currentLevel) {
                         // 回到上一级列表
-                        for (let i = 0; i < currentLevel - level; i++) {
-                            listStack.pop();
-                        }
-                        currentList = listStack[listStack.length - 1];
+                        currentLevel = level;
+                        currentList = lists[level];
                     }
                     
-                    currentList.appendChild(listItem);
-                    currentLevel = level;
+                    // 添加链接到目录项
+                    item.appendChild(link);
+                    currentList.appendChild(item);
+                    
+                    // 点击目录项滚动到对应位置
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            // 平滑滚动到目标位置
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 100,
+                                behavior: 'smooth'
+                            });
+                            
+                            // 如果是移动端，关闭目录
+                            if (mobileToc && !mobileToc.classList.contains('hidden')) {
+                                mobileToc.classList.add('hidden');
+                                document.body.style.overflow = '';
+                            }
+                        }
+                    });
                 });
                 
-                // 将目录添加到页面中
+                // 将生成的目录添加到页面中
                 tocContents.forEach(tocContent => {
+                    tocContent.innerHTML = '';
                     tocContent.appendChild(toc.cloneNode(true));
-                });
-            } else {
-                // 如果没有标题，隐藏目录按钮
-                if (tocButton) {
-                    tocButton.style.display = 'none';
-                }
-                
-                // 隐藏目录容器
-                tocContents.forEach(tocContent => {
-                    const tocContainer = tocContent.closest('.hidden.md\\:block, #mobile-toc');
-                    if (tocContainer) {
-                        tocContainer.style.display = 'none';
-                    }
                 });
             }
         }
-    }
+    });
 </script>
 </body>
 </html>
