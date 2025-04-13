@@ -1,9 +1,9 @@
 ---
-title: "CRM分析报告"
+title: "CRMBI分析报告"
 date: 2023-10-01
 layout: default
+permalink: /blogs/crm-analysis-report/
 ---
-
 
 1. 小程序端：
 
