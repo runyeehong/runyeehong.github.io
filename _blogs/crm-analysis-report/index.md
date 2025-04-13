@@ -1,7 +1,7 @@
 ---
 title: "CRM分析报告"
 date: 2023-10-01
-layout: post
+layout: default
 ---
 
 

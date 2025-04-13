@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} - {% endif %}pmrunyee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF',
+                        dark: '#1F2937',
+                        light: '#F3F4F6'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                    typography: (theme) => ({
+                        DEFAULT: {
+                            css: {
+                                color: theme('colors.gray.800'),
+                                h1: {
+                                    color: theme('colors.gray.900'),
+                                    fontWeight: '700',
+                                },
+                                h2: {
+                                    color: theme('colors.gray.900'),
+                                    fontWeight: '600',
+                                },
+                                h3: {
+                                    color: theme('colors.gray.900'),
+                                    fontWeight: '600',
+                                },
+                                a: {
+                                    color: theme('colors.blue.600'),
+                                    '&:hover': {
+                                        color: theme('colors.blue.800'),
+                                    },
+                                },
+                                code: {
+                                    color: theme('colors.gray.800'),
+                                    backgroundColor: theme('colors.gray.100'),
+                                    padding: '0.2em 0.4em',
+                                    borderRadius: '0.25rem',
+                                },
+                                pre: {
+                                    backgroundColor: theme('colors.gray.800'),
+                                    color: theme('colors.gray.100'),
+                                }
+                            },
+                        },
+                    }),
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer components {
+            .tag {
+                @apply inline-block px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap;
+            }
+            .tag-saas { @apply tag bg-indigo-100 text-indigo-800; }
+            .tag-cloud { @apply tag bg-blue-100 text-blue-800; }
+            .tag-enterprise { @apply tag bg-red-100 text-red-800; }
+            .tag-collab { @apply tag bg-green-100 text-green-800; }
+            .tag-crm { @apply tag bg-orange-100 text-orange-800; }
+            .tag-ai { @apply tag bg-purple-100 text-purple-800; }
+            .tag-method { @apply tag bg-cyan-100 text-cyan-800; }
+            
+            /* 添加 prose 样式 */
+            .prose {
+                @apply max-w-none text-gray-800;
+            }
+            .prose h1 {
+                @apply text-3xl font-bold text-gray-900 mt-8 mb-4;
+            }
+            .prose h2 {
+                @apply text-2xl font-bold text-gray-900 mt-6 mb-3;
+            }
+            .prose h3 {
+                @apply text-xl font-semibold text-gray-900 mt-5 mb-2;
+            }
+            .prose p {
+                @apply my-4;
+            }
+            .prose ul, .prose ol {
+                @apply my-4 pl-6;
+            }
+            .prose li {
+                @apply mb-1;
+            }
+            .prose a {
+                @apply text-blue-600 hover:text-blue-800 underline;
+            }
+            .prose img {
+                @apply max-w-full rounded-lg my-6;
+            }
+            .prose blockquote {
+                @apply border-l-4 border-gray-300 pl-4 italic my-6;
+            }
+            .prose code {
+                @apply bg-gray-100 px-1 py-0.5 rounded text-sm;
+            }
+            .prose pre {
+                @apply bg-gray-800 text-white p-4 rounded-lg overflow-auto my-6;
+            }
+            .prose pre code {
+                @apply bg-transparent text-white p-0;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 text-gray-800">
+    <nav class="fixed w-full bg-white shadow-sm z-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-xl font-bold text-dark">pmrunyee</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">主页</a>
+                    <a href="/#projects" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">作品</a>
+                    <a href="/#blogs" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">博客</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <div class="prose max-w-none">
+            {{ content }}
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2">pmrunyee</h3>
+                    <p class="text-gray-300">Wechat/Email：yysafari@foxmail.com</p>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+                <p>© 2025 pmrunyee Portfolio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
