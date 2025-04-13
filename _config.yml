@@ -1,0 +1,27 @@
+# _config.yml (修正版)
+permalink: pretty  # 修正拼写错误(permaLink→permalink)
+include:
+  - 'projects'     # 包含projects目录
+  - 'blogs'        # 新增blogs目录
+  - 'assets'       # 新增assets目录
+  - 'js'           # 新增js目录
+
+
+
+  # _config.yml (完整配置)
+
+# permalink: /blogs/:year/:month/:title/  # 更SEO友好的URL结构
+# include:
+  # - 'projects'
+ #  - 'blogs'
+ #  - 'assets'  # 如果有全局资源目录
+
+# Markdown扩展
+
+# markdown: kramdown
+# kramdown:
+  # syntax_highlighter: rouge
+
+# 多语言支持（可选）
+# plugins:
+  # - jekyll-polyglot
