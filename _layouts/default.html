@@ -125,13 +125,75 @@
                     <a href="/#projects" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">作品</a>
                     <a href="/#blogs" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">博客</a>
                 </div>
+                <!-- 移动端菜单按钮 -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-500 hover:text-primary">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 移动端菜单内容 -->
+            <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg rounded-b-lg mt-1">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100">主页</a>
+                    <a href="/#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100">作品</a>
+                    <a href="/#blogs" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100">博客</a>
+                </div>
             </div>
         </div>
     </nav>
 
+    <!-- 在 <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto"> 之后添加 -->
     <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div class="prose max-w-none">
-            {{ content }}
+        <!-- 文章标题和目录按钮 -->
+        {% if page.title %}
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">{{ page.title }}</h1>
+            <!-- 只有在页面设置了toc:true时才显示目录按钮 -->
+            {% if page.toc %}
+            <button id="toc-button" class="md:hidden bg-white text-gray-700 border border-gray-300 rounded-md px-3 py-1 text-sm flex items-center">
+                目录 <svg class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <!-- 文章内容和目录 -->
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- 移动端目录 (默认隐藏) -->
+            {% if page.toc %}
+            <div id="mobile-toc" class="md:hidden fixed inset-0 bg-black bg-opacity-30 z-50 hidden">
+                <div class="bg-white rounded-lg shadow-xl max-w-xs mx-auto mt-20 max-h-[70vh] overflow-y-auto">
+                    <div class="flex justify-between items-center p-4 border-b">
+                        <h3 class="font-medium">文章目录</h3>
+                        <button id="close-toc" class="text-gray-500">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                    <div class="p-4 toc-content"></div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- 桌面端目录 (固定在右侧) -->
+            {% if page.toc %}
+            <div class="hidden md:block md:w-64 lg:w-72 flex-shrink-0">
+                <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)]">
+                    <h3 class="text-lg font-medium mb-4 text-gray-900">文章目录</h3>
+                    <div class="toc-content"></div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- 文章内容 -->
+            <div class="flex-1 {% if page.toc %}md:order-first{% endif %}">
+                <div class="prose max-w-none">
+                    {{ content }}
+                </div>
+            </div>
         </div>
     </div>
 
@@ -148,5 +210,149 @@
             </div>
         </div>
     </footer>
+<!-- 在页脚之后，body结束标签之前添加 -->
+<script>
+    // 移动端菜单交互
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // 点击菜单项后自动关闭菜单
+            const mobileMenuItems = mobileMenu.querySelectorAll('a');
+            mobileMenuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        }
+        
+        // 文章目录功能
+        const tocButton = document.getElementById('toc-button');
+        const mobileToc = document.getElementById('mobile-toc');
+        const closeToc = document.getElementById('close-toc');
+        
+        if (tocButton && mobileToc) {
+            // 生成目录内容
+            generateTableOfContents();
+            
+            // 打开目录
+            tocButton.addEventListener('click', function() {
+                mobileToc.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            });
+            
+            // 关闭目录
+            if (closeToc) {
+                closeToc.addEventListener('click', function() {
+                    mobileToc.classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
+            }
+            
+            // 点击目录外区域关闭目录
+            mobileToc.addEventListener('click', function(e) {
+                if (e.target === mobileToc) {
+                    mobileToc.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // 点击目录项后关闭目录
+            const tocLinks = mobileToc.querySelectorAll('a');
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileToc.classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+    });
+    
+    // 生成文章目录
+    function generateTableOfContents() {
+        const contentElement = document.querySelector('.prose');
+        const tocContents = document.querySelectorAll('.toc-content');
+        const tocButton = document.getElementById('toc-button');
+        
+        if (contentElement && tocContents.length > 0) {
+            const headings = contentElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            
+            if (headings.length > 0) {
+                const toc = document.createElement('ul');
+                toc.className = 'space-y-1 text-sm';
+                
+                let currentLevel = 0;
+                let currentList = toc;
+                let listStack = [toc];
+                
+                headings.forEach((heading, index) => {
+                    // 获取标题级别
+                    const level = parseInt(heading.tagName.charAt(1));
+                    
+                    // 为标题添加ID，用于锚点链接
+                    if (!heading.id) {
+                        heading.id = `heading-${index}`;
+                    }
+                    
+                    // 创建目录项
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = `#${heading.id}`;
+                    link.textContent = heading.textContent;
+                    link.className = 'text-gray-700 hover:text-gray-900 hover:underline block py-1';
+                    
+                    // 根据标题级别添加缩进
+                    if (level > 1) {
+                        link.style.paddingLeft = `${(level - 1) * 0.75}rem`;
+                    }
+                    
+                    listItem.appendChild(link);
+                    
+                    // 处理嵌套列表
+                    if (level > currentLevel) {
+                        // 创建新的子列表
+                        const newList = document.createElement('ul');
+                        newList.className = 'pl-4 space-y-1';
+                        listStack[listStack.length - 1].lastChild.appendChild(newList);
+                        listStack.push(newList);
+                        currentList = newList;
+                    } else if (level < currentLevel) {
+                        // 回到上一级列表
+                        for (let i = 0; i < currentLevel - level; i++) {
+                            listStack.pop();
+                        }
+                        currentList = listStack[listStack.length - 1];
+                    }
+                    
+                    currentList.appendChild(listItem);
+                    currentLevel = level;
+                });
+                
+                // 将目录添加到页面中
+                tocContents.forEach(tocContent => {
+                    tocContent.appendChild(toc.cloneNode(true));
+                });
+            } else {
+                // 如果没有标题，隐藏目录按钮
+                if (tocButton) {
+                    tocButton.style.display = 'none';
+                }
+                
+                // 隐藏目录容器
+                tocContents.forEach(tocContent => {
+                    const tocContainer = tocContent.closest('.hidden.md\\:block, #mobile-toc');
+                    if (tocContainer) {
+                        tocContainer.style.display = 'none';
+                    }
+                });
+            }
+        }
+    }
+</script>
 </body>
 </html>

@@ -1,95 +1,126 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<!-- 在head部分确保正确引用样式 -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Runyee - B2B产品经理,专注CRM、SaaS和企业信息化领域">
     <title>pmrunyee | B2B产品经理</title>
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 自定义配置 -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3B82F6',
-                        secondary: '#1E40AF',
-                        dark: '#1F2937',
-                        light: '#F3F4F6'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'Microsoft YaHei', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    
     <!-- 自定义样式 -->
-    <style type="text/tailwindcss">
-        @layer components {
-            .tag {
-                @apply inline-block px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap;
-            }
-            .tag-saas { @apply tag bg-indigo-100 text-indigo-800; }
-            .tag-cloud { @apply tag bg-blue-100 text-blue-800; }
-            .tag-enterprise { @apply tag bg-red-100 text-red-800; }
-            .tag-collab { @apply tag bg-green-100 text-green-800; }
-            .tag-crm { @apply tag bg-orange-100 text-orange-800; }
-            .tag-ai { @apply tag bg-purple-100 text-purple-800; }
-            .tag-method { @apply tag bg-cyan-100 text-cyan-800; }
-            
-            /* 新增：导航栏选中状态 */
-            .nav-link-active {
-                @apply text-dark font-medium border-b-2 border-dark;
-            }
+    <link rel="stylesheet" href="assets/css/main.css">
+    
+    <!-- 内联样式确保导航栏选中态正确显示 -->
+    <style>
+        .nav-link-active {
+            color: black !important;
+            font-weight: 500 !important;
+            border-bottom: 2px solid black !important;
+        }
+        
+        /* 标签样式调整 */
+        .tag-saas, .tag-cloud, .tag-enterprise, .tag-collab, .tag-crm, .tag-ai, .tag-method {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 9999px;
+            white-space: nowrap;
+        }
+        
+        .tag-saas {
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+        
+        .tag-cloud {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .tag-enterprise {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .tag-collab {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        
+        .tag-crm {
+            background-color: #ffedd5;
+            color: #c2410c;
+        }
+        
+        .tag-ai {
+            background-color: #f3e8ff;
+            color: #7e22ce;
+        }
+        
+        .tag-method {
+            background-color: #cffafe;
+            color: #0e7490;
         }
     </style>
+    
+    <!-- 自定义脚本 -->
+    <script src="assets/js/main.js" defer></script>
 </head>
 <body class="font-sans bg-gray-50 text-gray-800">
-    <!-- 导航栏 (已修改) -->
+    <!-- 导航栏 -->
     <nav class="fixed w-full bg-white shadow-sm z-10">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <!-- 修改：名称改为pmrunyee并加粗黑色 -->
                     <span class="text-xl font-bold text-dark">pmrunyee</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
-                    <!-- 修改：去掉分析栏，调整选中状态 -->
                     <a href="#home" class="nav-link-active">主页</a>
                     <a href="#projects" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">作品</a>
                     <a href="#blog" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">博客</a>
                 </div>
+                <!-- 移动端菜单按钮 -->
                 <div class="md:hidden flex items-center">
-                    <button class="text-gray-500 hover:text-primary">
+                    <button id="mobile-menu-button" class="text-gray-500 hover:text-primary">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
                 </div>
             </div>
+            
+            <!-- 移动端菜单内容 -->
+            <div id="mobile-menu" class="md:hidden hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-black bg-gray-100">主页</a>
+                    <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-50">作品</a>
+                    <a href="#blog" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-50">博客</a>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <!-- 主页 -->
+    <!-- 主页内容 -->
     <section id="home" class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <!-- 头像和介绍 -->
         <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-            <!-- 头像 (已修改：外轮廓改为白色) -->
             <div class="w-40 h-40 rounded-full bg-white p-1 border-4 border-white shadow-md">
                 <div class="w-full h-full rounded-full bg-gray-100 overflow-hidden">
-                    <img src="https://placehold.co/400x400?text=PM" alt="pmrunyee头像" class="w-full h-full object-cover">
+                    <img src="assets/avater.jpg" alt="pmrunyee头像" class="w-full h-full object-cover">
                 </div>
             </div>
             
-            <!-- 介绍 -->
             <div class="flex-1">
                 <h1 class="text-3xl sm:text-4xl font-bold text-dark mb-3">pmrunyee</h1>
                 <p class="text-lg text-gray-400 mb-8">B2B产品经理,目前在研究CRM</p>
             </div>
         </div>
         
-        <!-- 个人简介 (已修改：去掉标题下划线) -->
+        <!-- 个人简介 -->
         <div class="mt-10 max-w-3xl">
             <h2 class="text-2xl font-bold text-dark mb-4">
                 Welcome to runyee's blog
@@ -97,34 +128,33 @@
             <div class="space-y-2 text-gray-800">
                 <p class="leading-loose">从事B端产品工作5年，有0-1、1-N企业级产品设计经验。擅长复杂业务需求分析、产品架构设计、高质量方案编写与宣讲、客户沟通与关系维护。</p>
                 
-                <!-- 修改：个人简介标签展示 -->
-              <div class="space-y-4 mt-6">
-    <!-- 过往工作领域 -->
-  <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
-        <p class=" text-gray-700 min-w-[100px] sm:min-w-[120px]">过往工作领域：</p>
-        <div class="flex flex-wrap gap-2">
-            <span class="tag-saas">SaaS</span>
-            <span class="tag-cloud">云通信</span>
-            <span class="tag-enterprise">企业信息化</span>
-            <span class="tag-collab">协同办公</span>
-        </div>
-    </div>
-    
-    <!-- 目前在研究 -->
-    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
-        <p class=" text-gray-700 min-w-[100px] sm:min-w-[120px]">目前在研究：</p>
-        <div class="flex flex-wrap gap-2">
-            <span class="tag-crm">CRM</span>
-            <span class="tag-ai">AI工具</span>
-            <span class="tag-method">方法建模</span>
-        </div>
-    </div>
-</div>
+                <div class="space-y-4 mt-6">
+                    <!-- 过往工作领域 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
+                        <p class="text-gray-700 min-w-[100px] sm:min-w-[120px]">过往工作领域：</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tag-saas">SaaS</span>
+                            <span class="tag-cloud">云通信</span>
+                            <span class="tag-enterprise">企业信息化</span>
+                            <span class="tag-collab">协同办公</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 目前在研究 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
+                        <p class="text-gray-700 min-w-[100px] sm:min-w-[120px]">目前在研究：</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tag-crm">CRM</span>
+                            <span class="tag-ai">AI工具</span>
+                            <span class="tag-method">方法建模</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- 项目作品 (已修改：去掉标题下划线) -->
+    <!-- 项目作品 -->
     <section id="projects" class="py-16 bg-white px-4 sm:px-6 lg:px-8">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-2xl font-bold text-dark mb-8">
@@ -132,6 +162,7 @@
             </h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 项目卡片内容保持不变 -->
                 <!-- 项目1 -->
                 <div class="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
                     <div class="h-48 bg-gradient-to-r from-blue-50 to-cyan-50 flex items-center justify-center">
@@ -149,7 +180,7 @@
                 
                 <!-- 项目2 -->
                 <div class="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                    <a href="/projects/property-management" class="block">  <!-- 修改：移除开头的斜杠，修正链接范围 -->
+                    <a href="/projects/property-management" class="block">
                         <div class="h-48 bg-gradient-to-r from-green-50 to-emerald-50 flex items-center justify-center">
                             <span class="text-4xl">🏢</span>
                         </div>
@@ -161,7 +192,7 @@
                             </div>
                             <p class="text-gray-600">从0-1主导物业业务管理系统，推动多个客户使用并实现盈利</p>
                         </div>
-                    </a>  <!-- 修改：将闭合标签移到正确位置 -->
+                    </a>
                 </div>
                 
                 <!-- 项目3 -->
@@ -182,7 +213,7 @@
         </div>
     </section>
 
-    <!-- 产品研究 (已修改：竞品分析改为产品研究，去掉标题下划线) -->
+    <!-- 产品研究 -->
     <section id="analysis" class="py-16 bg-gray-50 px-4 sm:px-6 lg:px-8">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-2xl font-bold text-dark mb-8">
@@ -191,40 +222,42 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- 文章1 -->
-                <a href="/blogs/crm-analysis-report/" class="block">  <!-- 新增链接 -->
-                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 bg-blue-100 p-3 rounded-lg">
-                            <span class="text-2xl">🔍</span>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-xl font-semibold mb-2">纷享销客CRM分析</h3>
-                            <div class="flex flex-wrap gap-2 mb-3">
-                                <span class="tag-crm">CRM</span>
-                                <span class="tag-enterprise">企业信息化</span>
+                <a href="/blogs/crm-analysis-report/" class="block">
+                    <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-blue-100 p-3 rounded-lg">
+                                <span class="text-2xl">🔍</span>
                             </div>
-                            <p class="text-gray-600">深度解析产品架构与市场策略，输出15页分析报告</p>
+                            <div class="ml-4">
+                                <h3 class="text-xl font-semibold mb-2">纷享销客CRM分析</h3>
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    <span class="tag-crm">CRM</span>
+                                    <span class="tag-enterprise">企业信息化</span>
+                                </div>
+                                <p class="text-gray-600">深度解析产品架构与市场策略，输出15页分析报告</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
                 
                 <!-- 文章2 -->
-                <a href="/blogs/crmbi-analysis-report/" class="block">  <!-- 新增链接 -->
-                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 bg-purple-100 p-3 rounded-lg">
-                            <span class="text-2xl">📈</span>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-xl font-semibold mb-2">纷享销客BI平台</h3>
-                            <div class="flex flex-wrap gap-2 mb-3">
-                                <span class="tag-crm">CRM</span>
-                                <span class="tag-ai">AI工具</span>
+                <a href="/blogs/crmbi-analysis-report/" class="block">
+                    <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-purple-100 p-3 rounded-lg">
+                                <span class="text-2xl">📈</span>
                             </div>
-                            <p class="text-gray-600">评估智能分析平台的数据处理能力与可视化方案</p>
+                            <div class="ml-4">
+                                <h3 class="text-xl font-semibold mb-2">纷享销客BI平台</h3>
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    <span class="tag-crm">CRM</span>
+                                    <span class="tag-ai">AI工具</span>
+                                </div>
+                                <p class="text-gray-600">评估智能分析平台的数据处理能力与可视化方案</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
@@ -257,20 +290,28 @@
             </div>
         </div>
     </footer>
-
-    <!-- 导航栏交互脚本 -->
-    <script>
-        // 更新导航栏选中状态
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', function() {
-                document.querySelectorAll('nav a').forEach(el => {
-                    el.classList.remove('nav-link-active');
-                    el.classList.add('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
-                });
-                this.classList.add('nav-link-active');
-                this.classList.remove('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
+</body>
+<!-- 在页脚之后，body结束标签之前添加 -->
+<script>
+    // 移动端菜单交互
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
             });
-        });
-    </script>
+            
+            // 点击菜单项后自动关闭菜单
+            const mobileMenuItems = mobileMenu.querySelectorAll('a');
+            mobileMenuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        }
+    });
+</script>
 </body>
 </html>

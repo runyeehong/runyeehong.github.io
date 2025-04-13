@@ -2,8 +2,9 @@
 title: "CRMBI分析报告"
 date: 2023-10-01
 layout: default
+permalink: /blogs/crmbi-analysis-report/
+toc: true
 ---
-
 ## 项目概述
 bi分析报告
 
@@ -56,8 +57,9 @@ bi分析报告
 
    4. 访客的模块配置：餐厅服务、在线报修、服务电话
 
-
    1. 后台管理端：
+   
+   
 
 * 项目设置-访客模块设置-子模块
 

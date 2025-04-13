@@ -2,6 +2,8 @@
 title: "物业管理平台"
 date: 2023-10-01
 layout: default
+permalink: /projects/property-management/
+toc: true
 ---
 ## 项目概述
 
@@ -22,40 +24,41 @@ layout: default
 ## 技术栈
 
 ### 前端
+
 - Vue.js 3.0
 - Element Plus
 - ECharts 5.0
 
 ### 后端
+
 - Spring Boot 2.7
 - MySQL 8.0
 - Redis 6.2
 
 ## 项目亮点
 
-1. **多租户架构**  
+1. **多租户架构**
    支持同一套系统服务多个物业公司，数据完全隔离
+2. **智能报修**
 
-2. **智能报修**  
    - 图片/视频上传
    - 自动派单算法
    - 维修进度实时推送
+3. **数据可视化**
 
-3. **数据可视化**  
    ```javascript
+
+   ```
+
 测试：
+
 1. 小程序端：
 
    1. 项目banner图设计
-
    2. banner图-点击详情里面的文字进行更新：（需要把法官学院的介绍去掉）
-
    3. 最新资讯：要添加一些文章和配图（同法官学院）
-
    4. 访客的模块配置：餐厅服务、在线报修、服务电话
-
-
-   1. 后台管理端：
+   5. 后台管理端：
 
 * 项目设置-访客模块设置-子模块
 
@@ -63,17 +66,13 @@ layout: default
 
 点击提交的时候如果用户没选择子服务则保存不了。给提示“请您至少选择一种XXX下的所属服务”
 
-
-
-
 1. 在线报修：（若需要的话）
 
 * 【访客端】是否可以把选择报修类别、报修位置、这两项给隐藏掉？
 
-
 ## 3、服务电话
 
-* 【服务电话】需要提前配置 
+* 【服务电话】需要提前配置
 
 ## 4、后台中模块中的文字描述优化
 
@@ -85,12 +84,9 @@ layout: default
 
 ### 菜品预约：
 
-
 ## 5、小程序为空的文字：
 
 在后台给人员配置了岗位但是未指定人员
-
-
 
 【备注】：
 
@@ -100,15 +96,12 @@ layout: default
 
 采购单-有一个总价。
 
-
-
-
-   // 示例代码
-   const chart = echarts.init(document.getElementById('chart'));
-   chart.setOption({
-       series: [{
-           type: 'pie',
-           data: [{value: 75, name: '已完成'}, 
-                  {value: 25, name: '进行中'}]
-       }]
-   });
+// 示例代码
+const chart = echarts.init(document.getElementById('chart'));
+chart.setOption({
+series: [{
+type: 'pie',
+data: [{value: 75, name: '已完成'},
+{value: 25, name: '进行中'}]
+}]
+});

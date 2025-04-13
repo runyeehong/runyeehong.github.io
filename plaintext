@@ -1,0 +1,27 @@
+runyeehong.github.io/plaintext
+├── _layouts/                # 布局模板
+│   ├── default.html         # 默认布局
+│   ├── post.html            # 博客文章布局
+│   └── project.html         # 项目展示布局
+├── _includes/               # 可复用的HTML片段
+│   ├── header.html
+│   ├── footer.html
+│   └── toc.html             # 目录组件
+├── _projects/               # 项目文件夹
+│   ├── project1/
+│   │   ├── index.md         # 项目主页
+│   │   └── images/          # 项目相关图片
+│   └── project2/
+│       └── index.md
+├── _blogs/                  # 博客文章文件夹
+│   ├── category1/           # 按类别组织
+│   │   ├── post1.md
+│   │   └── post2.md
+│   └── category2/
+│       └── post3.md
+├── assets/                  # 静态资源
+│   ├── css/
+│   ├── js/
+│   └── images/
+├── _config.yml              # Jekyll配置
+└── index.html               # 网站首页
