@@ -290,10 +290,17 @@
                         // 创建新的子列表
                         const newList = document.createElement('ul');
                         newList.className = 'pl-4 space-y-1 mt-1';
-                        lists[currentLevel].lastChild.appendChild(newList);
-                        lists.push(newList);
-                        currentList = newList;
-                        currentLevel = level;
+                        
+                        // 确保lists[currentLevel]存在且有lastChild
+                        if (lists[currentLevel] && lists[currentLevel].lastChild) {
+                            lists[currentLevel].lastChild.appendChild(newList);
+                            lists.push(newList);
+                            currentList = newList;
+                            currentLevel = level;
+                        } else {
+                            // 如果没有lastChild，直接添加到当前列表
+                            lists[currentLevel].appendChild(item);
+                        }
                     } else if (level < currentLevel) {
                         // 回到上一级列表
                         currentLevel = level;
@@ -329,8 +336,11 @@
                 
                 // 将生成的目录添加到页面中
                 tocContents.forEach(tocContent => {
-                    tocContent.innerHTML = '';
-                    tocContent.appendChild(toc.cloneNode(true));
+                    // 确保tocContent存在
+                    if (tocContent) {
+                        tocContent.innerHTML = '';
+                        tocContent.appendChild(toc.cloneNode(true));
+                    }
                 });
             }
         }
