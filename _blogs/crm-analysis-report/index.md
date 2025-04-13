@@ -3,6 +3,7 @@ title: "CRMBI分析报告"
 date: 2023-10-01
 layout: default
 permalink: /blogs/crm-analysis-report/
+toc: true
 ---
 
 1. 小程序端：
@@ -14,6 +15,7 @@ permalink: /blogs/crm-analysis-report/
    3. 最新资讯：要添加一些文章和配图（同法官学院）
 
    4. 访客的模块配置：餐厅服务、在线报修、服务电话
+
 
 
    1. 后台管理端：
