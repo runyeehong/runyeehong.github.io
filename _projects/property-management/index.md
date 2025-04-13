@@ -1,7 +1,8 @@
 ---
 title: "物业管理平台"
 date: 2023-10-01
-layout: /projects/property-management/
+layout: default
+permalink: /projects/property-management/
 ---
 ## 项目概述
 
