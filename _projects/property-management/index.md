@@ -96,6 +96,7 @@ toc: true
 
 采购单-有一个总价。
 
+<<<<<<< HEAD
 // 示例代码
 const chart = echarts.init(document.getElementById('chart'));
 chart.setOption({
@@ -105,3 +106,17 @@ data: [{value: 75, name: '已完成'},
 {value: 25, name: '进行中'}]
 }]
 });
+=======
+
+
+
+   // 示例代码
+   const chart = echarts.init(document.getElementById('chart'));
+   chart.setOption({
+       series: [{
+           type: 'pie',
+           data: [{value: 75, name: '已完成'}, 
+                  {value: 25, name: '进行中'}]
+       }]
+   });
+>>>>>>> ff4982a27cbba46c52dfd3a0dedad0559ad4a108
