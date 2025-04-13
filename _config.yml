@@ -1,27 +1,52 @@
 # _config.yml (修正版)
+collections:
+  blogs:
+    output: true
+    permalink: /blogs/:path/
+  projects:
+    output: true
+    permalink: /projects/:path/
+
+defaults:
+  - scope:
+      path: "_blogs"
+    values:
+      layout: post
+  - scope:
+      path: "_projects"
+    values:
+      layout: project
+
 permalink: pretty  # 修正拼写错误(permaLink→permalink)
 include:
   - 'projects'     # 包含projects目录
   - 'blogs'        # 新增blogs目录
   - 'assets'       # 新增assets目录
   - 'js'           # 新增js目录
+  - 'images'       # 图片目录（如有）
+  - 'css'          # 样式目录（如有）
+  - 'fonts'        # 字体目录（如有）
+  - 'favicon.ico'  # 网站图标（如有）
+exclude:
+  - 'Gemfile'
+  - 'Gemfile.lock'
+  - 'README.md'
 
-
-
-  # _config.yml (完整配置)
-
-# permalink: /blogs/:year/:month/:title/  # 更SEO友好的URL结构
-# include:
-  # - 'projects'
- #  - 'blogs'
- #  - 'assets'  # 如果有全局资源目录
-
-# Markdown扩展
-
-# markdown: kramdown
-# kramdown:
-  # syntax_highlighter: rouge
-
-# 多语言支持（可选）
-# plugins:
-  # - jekyll-polyglot
+# Markdown处理
+markdown: kramdown
+kramdown:
+  input: GFM        # 使用GitHub风格的Markdown
+  syntax_highlighter: rouge  # 代码高亮引擎
+# 插件配置
+plugins:
+  - jekyll-feed # RSS订阅支持
+  - jekyll-sitemap # 网站地图支持
+  - jekyll-paginate # 分页支持
+  - jekyll-seo-tag # SEO支持
+  - jekyll-commonmark # CommonMark支持
+  - jekyll-include-cache # 缓存支持
+  - jekyll-redirect-from # 重定向支持
+  - jekyll-polyglot # 多语言支持（可选）
+# 分页配置
+paginate: 5
+paginate_path: "/page/:num/"
