@@ -2,6 +2,7 @@
 title: "CRMBI分析报告"
 date: 2023-10-01
 layout: default
+permalink: /blogs/crmbi-analysis-report/
 ---
 
 ## 项目概述
