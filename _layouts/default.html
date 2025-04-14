@@ -175,8 +175,8 @@
         
         <!-- 移动端目录 (从底部弹出) -->
         {% if page.toc %}
-        <div id="mobile-toc" class="md:hidden fixed inset-0 bg-black bg-opacity-30 z-50 hidden">
-        <div class="bg-white rounded-t-lg shadow-xl absolute bottom-0 left-0 right-0 max-h-[66vh] overflow-y-auto transform transition-transform duration-300 translate-y-full" id="mobile-toc-container">
+        <div id="mobile-toc" class="md:hidden fixed inset-0 z-50 hidden">
+        <div class="bg-white rounded-t-lg shadow-xl absolute bottom-0 left-0 right-0 max-h-[55vh] overflow-y-auto transform transition-transform duration-300 translate-y-full" id="mobile-toc-container">
         <div class="flex justify-between items-center p-4 border-b sticky top-0 bg-white">
         <h3 class="font-medium text-base">文章目录</h3>
         <button id="close-toc" class="text-gray-500">
@@ -190,8 +190,8 @@
         
         <!-- 桌面端目录 (固定在右侧) -->
         {% if page.toc %}
-        <div class="hidden md:block md:w-3/10 lg:w-3/10 flex-shrink-0">
-        <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)]">
+        <div class="hidden md:block md:w-1/5 lg:w-1/5 flex-shrink-0">
+        <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
         <h3 class="text-base font-medium mb-3 text-gray-900 border-b pb-2">文章目录</h3>
         <div class="toc-content border-l pl-3"></div>
         </div>
@@ -199,7 +199,7 @@
         {% endif %}
         
         <!-- 文章内容 -->
-        <div class="flex-1 {% if page.toc %}md:w-7/10 lg:w-7/10{% endif %}">
+        <div class="flex-1 {% if page.toc %}md:w-4/5 lg:w-4/5{% endif %}">
         <div class="prose max-w-none">
         {{ content }}
         </div>
@@ -486,23 +486,25 @@
         box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
     }
     
-    /* 自定义滚动条 */
-    .toc-content::-webkit-scrollbar {
-        width: 4px;
+    /* 隐藏滚动条但保留滚动功能 */
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
     }
     
-    .toc-content::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;  /* Chrome, Safari, Opera */
     }
     
-    .toc-content::-webkit-scrollbar-thumb {
-        background: #d1d5db;
-        border-radius: 4px;
+    /* 目录中的文字换行 */
+    .break-words {
+        word-wrap: break-word;
+        word-break: break-all;
     }
     
-    .toc-content::-webkit-scrollbar-thumb:hover {
-        background: #9ca3af;
+    /* 移除移动端目录背景遮罩 */
+    #mobile-toc {
+        background-color: transparent;
     }
 </style>
 </body>
