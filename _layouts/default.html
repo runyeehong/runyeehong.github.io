@@ -186,7 +186,7 @@
         <!-- 移动端目录 (从底部弹出) -->
         {% if page.toc %}
         <div id="mobile-toc" class="md:hidden fixed inset-0 z-50 hidden">
-        <div class="bg-white rounded-t-lg shadow-xl absolute bottom-0 left-0 right-0 h-[80vh] overflow-y-auto transform transition-transform duration-300 translate-y-full" id="mobile-toc-container">
+        <div class="bg-white rounded-t-lg shadow-xl absolute bottom-0 left-0 right-0 h-[65vh] overflow-y-auto transform transition-transform duration-300 translate-y-full" id="mobile-toc-container">
         <div class="flex justify-between items-center p-4 sticky top-0 bg-white">
         <h3 class="font-medium text-base">文章目录</h3>
         <button id="close-toc" class="text-gray-500">
@@ -440,28 +440,7 @@
                 
                 // 监听滚动事件，更新目录高亮状态
                 window.addEventListener('scroll', debounce(function() {
-                    const scrollPosition = window.scrollY + document.querySelector('nav').offsetHeight + 20;
-                    let currentHeading = null;
-                    
-                    // 找到当前滚动位置对应的标题
-                    for (let i = 0; i < anchorPositions.length; i++) {
-                        if (scrollPosition >= anchorPositions[i].offsetTop) {
-                            currentHeading = anchorPositions[i].id;
-                        } else {
-                            break;
-                        }
-                    }
-                    
-                    // 更新目录项的激活状态
-                    if (currentHeading) {
-                        document.querySelectorAll('.toc-link').forEach(link => {
-                            link.classList.remove('active');
-                        });
-                        const activeLink = document.querySelector(`.toc-link[data-heading-id="${currentHeading}"]`);
-                        if (activeLink) {
-                            activeLink.classList.add('active');
-                        }
-                    }
+                    updateTocActiveState(anchorPositions, headingToTocMap);
                 }, 50));
                 
                 // 监听窗口大小变化，重新计算锚点位置
@@ -526,10 +505,11 @@
         
         // 根据滚动位置更新目录高亮状态
         function updateTocActiveState(anchorPositions, headingToTocMap) {
-            const scrollPosition = window.scrollY + 100; // 添加偏移量以提前触发高亮
+            const scrollPosition = window.scrollY + document.querySelector('nav').offsetHeight + 20;
             let activeHeadingId = null;
             
             // 找到当前滚动位置对应的标题
+            // 从后往前遍历，找到第一个位置小于当前滚动位置的标题
             for (let i = anchorPositions.length - 1; i >= 0; i--) {
                 if (scrollPosition >= anchorPositions[i].offsetTop) {
                     activeHeadingId = anchorPositions[i].id;
@@ -543,9 +523,11 @@
             });
             
             // 如果找到活动标题，高亮对应的目录项
-            if (activeHeadingId && headingToTocMap.has(activeHeadingId)) {
-                const activeLink = headingToTocMap.get(activeHeadingId);
-                activeLink.classList.add('active');
+            if (activeHeadingId) {
+                const activeLink = document.querySelector(`.toc-link[data-heading-id="${activeHeadingId}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
             }
         }
         
