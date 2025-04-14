@@ -218,7 +218,7 @@
             </div>
         </div>
     </footer>
-<!-- 在页脚之后，body结束标签之前添加 -->
+<!-- 修复脚本结构问题 -->
 <script>
     // 移动端菜单交互
     document.addEventListener('DOMContentLoaded', function() {
@@ -349,12 +349,11 @@
                     const item = document.createElement('li');
                     
                     // 创建链接
-                    // 修改目录链接创建部分
                     const link = document.createElement('a');
                     link.textContent = heading.textContent;
                     link.setAttribute('data-target-id', heading.id);
-                    // 修改类名定义，移除hover样式
-                    link.className = 'toc-link block py-1 transition-colors duration-200 break-words cursor-pointer';
+                    // 使用统一的类名
+                    link.className = 'toc-link';
                     link.setAttribute('data-heading-id', heading.id);
                     
                     // 存储标题到目录项的映射关系
@@ -383,90 +382,45 @@
                     item.appendChild(link);
                     currentList.appendChild(item);
                     
-                    // 点击目录项滚动到对应位置，但不修改URL
-                    // 修改点击事件处理
+                    // 点击目录项滚动到对应位置
                     link.addEventListener('click', function(e) {
                         e.preventDefault();
                         
-                        // 移除所有active类
+                        // 移除所有目录项的选中状态
                         document.querySelectorAll('.toc-link').forEach(a => {
                             a.classList.remove('active');
                         });
                         
-                        // 添加active类
+                        // 添加选中状态
                         this.classList.add('active');
                         
                         const targetId = this.getAttribute('data-target-id');
                         const targetElement = document.getElementById(targetId);
                         
                         if (targetElement) {
+                            // 获取导航栏高度
                             const navHeight = document.querySelector('nav').offsetHeight;
+                            // 添加额外的偏移量
                             const extraOffset = 20;
                             
-                            // 使用requestAnimationFrame确保平滑滚动
-                            requestAnimationFrame(() => {
-                                window.scrollTo({
-                                    top: targetElement.offsetTop - navHeight - extraOffset,
-                                    behavior: 'smooth'
-                                });
+                            // 滚动到目标位置
+                            window.scrollTo({
+                                top: targetElement.offsetTop - navHeight - extraOffset,
+                                behavior: 'smooth'
                             });
                             
-                            // 高亮目标标题
+                            // 高亮目标标题2秒
                             targetElement.classList.add('bg-gray-100');
                             setTimeout(() => {
                                 targetElement.classList.remove('bg-gray-100');
                             }, 2000);
                             
+                            // 如果是移动端，关闭目录
                             if (mobileToc && !mobileToc.classList.contains('hidden')) {
                                 closeTocMenu();
                             }
                         }
                     });
-                    
-                    // 修改滚动事件处理
-                    function updateTocActiveStateByScroll(anchorPositions, headingToTocMap) {
-                        if (!anchorPositions || anchorPositions.length === 0) return;
-                        
-                        const scrollPosition = window.scrollY;
-                        const navHeight = document.querySelector('nav').offsetHeight;
-                        const scrollThreshold = scrollPosition + navHeight + 10;
-                        
-                        let activeAnchorId = null;
-                        
-                        for (let i = 0; i < anchorPositions.length; i++) {
-                            if (anchorPositions[i].offsetTop > scrollThreshold) {
-                                activeAnchorId = i > 0 ? anchorPositions[i - 1].id : anchorPositions[0].id;
-                                break;
-                            }
-                        }
-                        
-                        if (!activeAnchorId && anchorPositions.length > 0) {
-                            activeAnchorId = anchorPositions[anchorPositions.length - 1].id;
-                        }
-                        
-                        if (activeAnchorId) {
-                            document.querySelectorAll('.toc-link').forEach(a => {
-                                a.classList.remove('active');
-                            });
-                            
-                            const activeTocItem = headingToTocMap.get(activeAnchorId);
-                            if (activeTocItem) {
-                                activeTocItem.classList.add('active');
-                                
-                                const tocContainer = activeTocItem.closest('.toc-content');
-                                if (tocContainer) {
-                                    const containerRect = tocContainer.getBoundingClientRect();
-                                    const linkRect = activeTocItem.getBoundingClientRect();
-                                    
-                                    if (linkRect.top < containerRect.top || linkRect.bottom > containerRect.bottom) {
-                                        requestAnimationFrame(() => {
-                                            activeTocItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    }
                 });
                 
                 // 将生成的目录添加到页面中
@@ -479,7 +433,7 @@
                 
                 // 监听滚动事件，更新目录高亮状态
                 window.addEventListener('scroll', debounce(function() {
-                    updateTocActiveStateByScroll(anchorPositions, headingToTocMap);
+                    updateTocActiveState(anchorPositions, headingToTocMap);
                 }, 50));
                 
                 // 监听窗口大小变化，重新计算锚点位置
@@ -496,7 +450,7 @@
                     anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
                     
                     // 更新目录高亮状态
-                    updateTocActiveStateByScroll(anchorPositions, headingToTocMap);
+                    updateTocActiveState(anchorPositions, headingToTocMap);
                 }, 100));
                 
                 // 监听图片加载完成事件，因为图片加载会改变布局
@@ -514,151 +468,146 @@
                         anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
                         
                         // 更新目录高亮状态
-                        updateTocActiveStateByScroll(anchorPositions, headingToTocMap);
+                        updateTocActiveState(anchorPositions, headingToTocMap);
                     }, 100));
                 });
                 
-                // 初始化目录高亮状态 - 保持原来的100ms
+                // 初始化目录高亮状态
                 setTimeout(() => {
-                    updateTocActiveStateByScroll(anchorPositions, headingToTocMap);
+                    updateTocActiveState(anchorPositions, headingToTocMap);
                 }, 100);
+                
+                // 页面加载完成后再次更新目录高亮状态
+                window.addEventListener('load', function() {
+                    // 重新计算所有标题的位置
+                    headings.forEach((heading, index) => {
+                        const position = anchorPositions.find(pos => pos.id === heading.id);
+                        if (position) {
+                            position.offsetTop = heading.offsetTop;
+                        }
+                    });
+                    
+                    // 重新排序
+                    anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
+                    
+                    // 更新目录高亮状态
+                    updateTocActiveState(anchorPositions, headingToTocMap);
+                });
             }
         }
         
         // 根据滚动位置更新目录高亮状态
-        function updateTocActiveStateByScroll(anchorPositions, headingToTocMap) {
-            if (!anchorPositions || anchorPositions.length === 0) return;
-            
-            const scrollPosition = window.scrollY;
-            const navHeight = document.querySelector('nav').offsetHeight;
-            const scrollThreshold = scrollPosition + navHeight + 10;
+        function updateTocActiveState(anchorPositions, headingToTocMap) {
+            const scrollPosition = window.scrollY + 100; // 添加偏移量以提前触发高亮
+            let activeHeadingId = null;
             
             // 找到当前滚动位置对应的标题
-            let activeAnchorId = null;
-            
-            // 查找第一个位置大于当前滚动位置的锚点
-            for (let i = 0; i < anchorPositions.length; i++) {
-                if (anchorPositions[i].offsetTop > scrollThreshold) {
-                    // 如果找到了，使用前一个锚点
-                    activeAnchorId = i > 0 ? anchorPositions[i - 1].id : anchorPositions[0].id;
+            for (let i = anchorPositions.length - 1; i >= 0; i--) {
+                if (scrollPosition >= anchorPositions[i].offsetTop) {
+                    activeHeadingId = anchorPositions[i].id;
                     break;
                 }
             }
             
-            // 如果滚动到了底部，使用最后一个锚点
-            if (!activeAnchorId && anchorPositions.length > 0) {
-                activeAnchorId = anchorPositions[anchorPositions.length - 1].id;
-            }
+            // 更新所有目录项的状态
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.classList.remove('active');
+            });
             
-            // 更新目录高亮状态
-            if (activeAnchorId) {
-                document.querySelectorAll('.toc-content a').forEach(a => {
-                    a.classList.remove('text-gray-900', 'font-medium', 'underline');
-                });
-                
-                // 使用映射直接获取对应的目录项
-                const activeTocItem = headingToTocMap.get(activeAnchorId);
-                if (activeTocItem) {
-                    activeTocItem.classList.add('text-gray-900', 'font-medium', 'underline');
-                    
-                    // 确保活动项在目录视图中可见
-                    const tocContainer = activeTocItem.closest('.toc-content');
-                    if (tocContainer) {
-                        const containerRect = tocContainer.getBoundingClientRect();
-                        const linkRect = activeTocItem.getBoundingClientRect();
-                        
-                        if (linkRect.top < containerRect.top || linkRect.bottom > containerRect.bottom) {
-                            activeTocItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }
-                    }
-                }
+            // 如果找到活动标题，高亮对应的目录项
+            if (activeHeadingId && headingToTocMap.has(activeHeadingId)) {
+                const activeLink = headingToTocMap.get(activeHeadingId);
+                activeLink.classList.add('active');
             }
         }
         
         // 防抖函数
         function debounce(func, wait) {
             let timeout;
-            return function() {
-                const context = this;
-                const args = arguments;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
                 clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    func.apply(context, args);
-                }, wait);
+                timeout = setTimeout(later, wait);
             };
         }
     });
 </script>
-// 在DOMContentLoaded事件末尾添加
-window.addEventListener('load', function() {
-    // 确保所有资源加载完成后再初始化目录
-    if (hasTocContent()) {
-        const headings = document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4');
-        const tocContents = document.querySelectorAll('.toc-content');
-        
-        if (headings.length > 0 && tocContents.length > 0) {
-            // 强制触发一次滚动事件来更新高亮状态
-            window.dispatchEvent(new Event('scroll'));
+
+<!-- 移除重复的样式代码块，保留一个完整的样式块 -->
+<style type="text/tailwindcss">
+        @layer components {
+            .tag {
+                @apply inline-block px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap;
+            }
+            .tag-saas { @apply tag bg-indigo-100 text-indigo-800; }
+            .tag-cloud { @apply tag bg-blue-100 text-blue-800; }
+            .tag-enterprise { @apply tag bg-red-100 text-red-800; }
+            .tag-collab { @apply tag bg-green-100 text-green-800; }
+            .tag-crm { @apply tag bg-orange-100 text-orange-800; }
+            .tag-ai { @apply tag bg-purple-100 text-purple-800; }
+            .tag-method { @apply tag bg-cyan-100 text-cyan-800; }
+            
+            /* 添加 prose 样式 */
+            .prose {
+                @apply max-w-none text-gray-800;
+            }
+            .prose h1 {
+                @apply text-3xl font-bold text-gray-900 mt-8 mb-4;
+            }
+            .prose h2 {
+                @apply text-2xl font-bold text-gray-900 mt-6 mb-3;
+            }
+            .prose h3 {
+                @apply text-xl font-semibold text-gray-900 mt-5 mb-2;
+            }
+            .prose p {
+                @apply my-4;
+            }
+            .prose ul, .prose ol {
+                @apply my-4 pl-6;
+            }
+            .prose li {
+                @apply mb-1;
+            }
+            .prose a {
+                @apply text-blue-600 hover:text-blue-800 underline;
+            }
+            .prose img {
+                @apply max-w-full rounded-lg my-6;
+            }
+            .prose blockquote {
+                @apply border-l-4 border-gray-300 pl-4 italic my-6;
+            }
+            .prose code {
+                @apply bg-gray-100 px-1 py-0.5 rounded text-sm;
+            }
+            .prose pre {
+                @apply bg-gray-800 text-white p-4 rounded-lg overflow-auto my-6;
+            }
+            .prose pre code {
+                @apply bg-transparent text-white p-0;
+            }
+            
+            /* 添加目录链接样式 */
+            .toc-link {
+                @apply block py-1 text-gray-600 hover:text-gray-900 transition-colors duration-200 cursor-pointer;
+            }
+            .toc-link.active {
+                @apply text-blue-600 font-medium;
+            }
+            
+            /* 移除目录滚动条 */
+            .no-scrollbar {
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
         }
-    }
-});
-</style>
+    </style>
 </body>
 </html>
-
-<style>
-    /* 目录基础样式 */
-    .toc-content ul {
-        list-style: none !important;
-        padding-left: 0 !important;
-    }
-    
-    .toc-content li {
-        margin-bottom: 0.25rem !important;
-    }
-    
-    /* 目录链接基础样式 */
-    .toc-link {
-        display: block !important;
-        padding: 0.25rem 0 !important;
-        color: #4B5563 !important;
-        text-decoration: none !important;
-        border-radius: 0.25rem !important;
-        transition: all 0.2s !important;
-    }
-    
-    /* 桌面端目录颜色 */
-    .desktop-toc-content .toc-link {
-        color: #9CA3AF !important;
-    }
-    
-    /* 悬停状态 */
-    .toc-link:hover {
-        color: #111827 !important;
-        font-weight: 600 !important;
-        background-color: rgba(17, 24, 39, 0.05) !important;
-    }
-    
-    /* 桌面端悬停状态 */
-    .desktop-toc-content .toc-link:hover {
-        color: #4B5563 !important;
-    }
-    
-    /* 选中状态 */
-    .toc-link.active {
-        color: #111827 !important;
-        font-weight: 600 !important;
-        background-color: rgba(17, 24, 39, 0.05) !important;
-    }
-    
-    /* 桌面端选中状态 */
-    .desktop-toc-content .toc-link.active {
-        color: #4B5563 !important;
-    }
-    
-    /* 移动端下划线 */
-    .toc-content:not(.desktop-toc-content) .toc-link.active {
-        text-decoration: underline !important;
-        text-underline-offset: 2px !important;
-    }
-</style>
