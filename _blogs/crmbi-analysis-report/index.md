@@ -5,100 +5,69 @@ layout: default
 permalink: /blogs/crmbi-analysis-report/
 toc: true
 ---
-bi分析报告
+在乡下生活，失业两年，自谋生路，这里是我的自救周记。
 
-这是一个从0到1主导的物业业务管理系统，包含以下核心模块：
+# 本周自救行动
+说说几个有意思的单子：
 
-- 权限管理系统
-- 报修管理平台
-- 餐品管理模块
-- 数据可视化看板
+## 企业表格自动化处理
+根据表格的内容，提取信息，下载附件到指定位置，压缩，更新表格。
 
-- 推动3个大型物业公司采用本系统
-- 实现系统上线6个月内启动盈利
-- 用户操作效率提升40%
-- 报修响应时间缩短60%
+用的是 Node.js & TypeScript 。
+前几年写 ts ，最麻烦的就是标注类型，
+有了 AI 之后，写 ts 的效率提高了太多。
+用 ts 写出的程序，更健壮，也更容易维护。
 
+从我的经验而言，AI 依然是一个助手的角色，我必须知道它每一步都做了什么，才不会被它带偏方向。
 
-- Vue.js 3.0
-- Element Plus
-- ECharts 5.0
+## Automa 自动化脚本
+这是一个老客户的需求，自动给招聘网站投简历。
 
-- Spring Boot 2.7
-- MySQL 8.0
-- Redis 6.2
+这个需求还是挺耗费时间的，因为 AI 帮不上忙，都得手动定位和调试。
 
+自动化脚本，这块儿市场需求还是挺多的，每个人的操作流程不同，需要不一样的定制方案。
+以后或许可以多接一些这类单子。
 
-1. **多租户架构**  
-   支持同一套系统服务多个物业公司，数据完全隔离
+对于一些重复性操作，都应该让机器帮我们自动完成。
 
-2. **智能报修**  
-   - 图片/视频上传
-   - 自动派单算法
-   - 维修进度实时推送
+## Vue 改 React
+这又是一个需要知道 AI 做了什么的例子。
 
-3. **数据可视化**  
-   ```javascript
-测试：
-1. 小程序端：
+客户会用 AI 帮忙转换，但他不理解 React 的代码，运行不了，他就没招了。
 
-   1. 项目banner图设计
+有人说， AI 取代程序员，目前看来，完全取代还做不到。
+但是五天的工作量，压缩到一天完成，或者原本需要五个人做的事情，现在也许只需要一个人就能做了。
 
-   2. banner图-点击详情里面的文字进行更新：（需要把法官学院的介绍去掉）
+对于我这种靠接单吃饭的程序员是有好处的。
+以前，一个单子，如果是两天的活儿，报价 1000 ，客户会嫌贵，不做了。
+这种单子没法成交，一方面程序员要耗费时间，另一方面，客户那边预算不够。
+但现在只需要两小时，报价 200 ，客户可以接受了。
+所以，在我看来， 我们可接单的范围是更广阔了。
+但从找工作的角度，也许岗位更少了，甚至要求也更高了。
 
-   3. 最新资讯：要添加一些文章和配图（同法官学院）
+## 基于 WangEditor 的二次开发
+这是一个失败案例。
 
-   4. 访客的模块配置：餐厅服务、在线报修、服务电话
+客户一开始说的是，改两个 BUG 。
+接了单以后，才发现是一个实验项目，主要是针对 WangEditor ，一个富文本编辑器的二次开发。
 
-   1. 后台管理端：
-   
-   
+需求表面上看并不复杂，但实际操作，要深入到 WangEditor 的源码。
+研究了两个小时的源码，跟客户说，要耗费更多的时间。
+然后才知道，客户是中介，他把单子转交给我做。
+唉，这种不能直接面对客户，交流就比较费劲，最后只能退款了。
 
-* 项目设置-访客模块设置-子模块
+## 本周收入
+成交 8 笔单子，合计 1410 元。
+其中有 2 笔，是老客户。
+感谢所有支持我的老板！
 
-![图片](data:image/png;base64,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)有此标记的模块是相关服务的子服务。（所属服务）
+为什么很多人在失业之后，会遇到困境？ 一大原因是没有自己的客户资源。
+我以前做青旅的时候，年营业额差不多有近三成是老顾客贡献的。
+但后面转型做回程序员，青旅的客户资源基本就用不上了，只能重新开始。
 
-点击提交的时候如果用户没选择子服务则保存不了。给提示“请您至少选择一种XXX下的所属服务”
+客户是需要积累的，信任也需要时间和合作案例去加深。
 
+目前老客户并不多，我也还是在模仿学习，比如把客户的联系方式加上，以后对方再有需求的时候，可能会直接想到我。
 
-
-
-1. 在线报修：（若需要的话）
-
-* 【访客端】是否可以把选择报修类别、报修位置、这两项给隐藏掉？
-
-
-
-在后台给人员配置了岗位但是未指定人员
-
-
-
-【备注】：
-
-采购方修改了订单。
-
-供应商修改了订单。
-
-采购单-有一个总价。
-
-
-
-
-
-
-
-
-
-
-
-
-
-   // 示例代码
-   const chart = echarts.init(document.getElementById('chart'));
-   chart.setOption({
-       series: [{
-           type: 'pie',
-           data: [{value: 75, name: '已完成'}, 
-                  {value: 25, name: '进行中'}]
-       }]
-   });
+结束语
+如果你在生活中，遇到任何计算机相关的技术问题，欢迎扫描下方二维码，免费咨询。

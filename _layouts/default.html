@@ -152,12 +152,7 @@
         {% if page.title %}
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-gray-900">{{ page.title }}</h1>
-            <!-- 只有在页面设置了toc:true时才显示目录按钮 -->
-            {% if page.toc %}
-            <button id="toc-button" class="md:hidden bg-white text-gray-700 border border-gray-300 rounded-md px-3 py-1 text-sm flex items-center">
-                目录 <svg class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-            {% endif %}
+            <!-- 旧的目录按钮已移除 -->
         </div>
         {% endif %}
         
@@ -184,7 +179,7 @@
         {% if page.toc %}
         <div id="mobile-toc" class="md:hidden fixed inset-0 z-50 hidden">
         <div class="bg-white rounded-t-lg shadow-xl absolute bottom-0 left-0 right-0 max-h-[55vh] overflow-y-auto transform transition-transform duration-300 translate-y-full" id="mobile-toc-container">
-        <div class="flex justify-between items-center p-4 border-b sticky top-0 bg-white">
+        <div class="flex justify-between items-center p-4 sticky top-0 bg-white">
         <h3 class="font-medium text-base">文章目录</h3>
         <button id="close-toc" class="text-gray-500">
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -199,7 +194,7 @@
         {% if page.toc %}
         <div id="desktop-toc" class="hidden md:block md:w-1/5 lg:w-1/5 flex-shrink-0">
         <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
-        <h3 class="text-base font-medium mb-3 text-gray-900 border-b pb-2">文章目录</h3>
+        <h3 class="text-base font-medium mb-3 text-gray-900">文章目录</h3>
         <div class="toc-content"></div>
         </div>
         </div>
@@ -372,18 +367,21 @@
                         
                         // 移除所有目录项的选中状态
                         document.querySelectorAll('.toc-content a').forEach(a => {
-                            a.classList.remove('text-gray-900', 'font-medium');
+                            a.classList.remove('text-gray-900', 'font-medium', 'underline');
                         });
                         
-                        // 添加选中状态
-                        this.classList.add('text-gray-900', 'font-medium');
+                        // 添加选中状态（增加下划线）
+                        this.classList.add('text-gray-900', 'font-medium', 'underline');
                         
                         const targetId = this.getAttribute('href').substring(1);
                         const targetElement = document.getElementById(targetId);
                         
                         if (targetElement) {
+                            // 使用 replaceState 避免将锚点添加到浏览器历史记录
+                            history.replaceState(null, null, window.location.pathname + window.location.search);
+                            
                             // 平滑滚动到目标位置，调整偏移量使标题位于页面顶部
-                            const offset = 120; // 增加偏移量，确保标题在视窗内可见
+                            const offset = 150; // 增加偏移量，确保标题在视窗内可见
                             const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
                             
                             window.scrollTo({
@@ -441,9 +439,9 @@
             // 更新目录选中状态
             if (currentHeadingId) {
                 document.querySelectorAll('.toc-content a').forEach(a => {
-                    a.classList.remove('text-gray-900', 'font-medium');
+                    a.classList.remove('text-gray-900', 'font-medium', 'underline');
                     if (a.getAttribute('data-heading-id') === currentHeadingId) {
-                        a.classList.add('text-gray-900', 'font-medium');
+                        a.classList.add('text-gray-900', 'font-medium', 'underline');
                     }
                 });
             }
@@ -488,10 +486,15 @@
         background-color: rgba(17, 24, 39, 0.05);
     }
     
-    /* 选中状态 */
+    /* 选中状态 - 加粗并显示下划线 */
     .toc-content a.text-gray-900 {
         color: #111827;
-        font-weight: 500;
+        font-weight: 600;
+    }
+    
+    .toc-content a.underline {
+        text-decoration: underline;
+        text-underline-offset: 2px;
     }
     
     /* 移动端目录动画 */
