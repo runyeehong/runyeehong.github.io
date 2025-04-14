@@ -195,11 +195,11 @@
         <!-- 桌面端目录 (固定在右侧) -->
         {% if page.toc %}
         <div id="desktop-toc" class="hidden md:block md:w-1/5 lg:w-1/5 flex-shrink-0">
-            <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
-                <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
-                <div class="border-b border-gray-200 mb-3"></div>
-                <div class="toc-content desktop-toc-content"></div>
-            </div>
+        <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
+        <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
+        <div class="border-b border-gray-200 mb-3"></div>
+        <div class="toc-content desktop-toc-content"></div>
+        </div>
         </div>
         {% endif %}
         </div>
@@ -316,6 +316,7 @@
                 
                 // 预处理所有标题，确保它们有唯一ID并记录位置信息
                 headings.forEach((heading, index) => {
+                    // 如果标题没有ID，添加一个
                     if (!heading.id) {
                         heading.id = `heading-${index}`;
                     }
@@ -350,6 +351,7 @@
                     // 创建链接
                     const link = document.createElement('a');
                     link.textContent = heading.textContent;
+                    // 不使用hash链接，改用data属性存储目标ID
                     link.setAttribute('data-target-id', heading.id);
                     link.className = 'text-gray-700 hover:text-gray-900 hover:underline block py-1 transition-colors duration-200 break-words cursor-pointer';
                     link.setAttribute('data-heading-id', heading.id);
@@ -380,7 +382,7 @@
                     item.appendChild(link);
                     currentList.appendChild(item);
                     
-                    // 点击目录项滚动到对应位置
+                    // 点击目录项滚动到对应位置，但不修改URL
                     link.addEventListener('click', function(e) {
                         e.preventDefault();
                         
@@ -401,7 +403,7 @@
                             // 添加额外的偏移量
                             const extraOffset = 20;
                             
-                            // 使用 scrollTo 滚动到目标位置
+                            // 使用 scrollTo 滚动到目标位置，但不修改URL
                             window.scrollTo({
                                 top: targetElement.offsetTop - navHeight - extraOffset,
                                 behavior: 'smooth'
@@ -527,8 +529,6 @@
             }
         }
         
-        // 原有的 updateTocActiveState 函数可以移除，由新的 IntersectionObserver 逻辑替代
-        
         // 防抖函数
         function debounce(func, wait) {
             let timeout;
@@ -640,97 +640,3 @@
 </style>
 </body>
 </html>
-
-// 为桌面端目录添加分页功能
-        function setupDesktopTocPagination() {
-            const desktopTocContent = document.querySelector('.desktop-toc-content');
-            const paginationContainer = document.querySelector('.toc-pagination');
-            if (!desktopTocContent || !paginationContainer) return;
-            
-            const tocItems = desktopTocContent.querySelectorAll('a');
-            if (tocItems.length <= 10) return; // 如果目录项不多，不需要分页
-            
-            // 显示分页控制
-            paginationContainer.classList.remove('hidden');
-            paginationContainer.classList.add('flex');
-            
-            const prevButton = paginationContainer.querySelector('.toc-prev-page');
-            const nextButton = paginationContainer.querySelector('.toc-next-page');
-            const pageInfo = paginationContainer.querySelector('.toc-page-info');
-            
-            const itemsPerPage = 10;
-            const totalPages = Math.ceil(tocItems.length / itemsPerPage);
-            let currentPage = 1;
-            
-            // 更新页码信息
-            function updatePageInfo() {
-                pageInfo.textContent = `${currentPage}/${totalPages}`;
-                prevButton.disabled = currentPage === 1;
-                nextButton.disabled = currentPage === totalPages;
-            }
-            
-            // 显示当前页的目录项
-            function showCurrentPageItems() {
-                tocItems.forEach((item, index) => {
-                    const shouldShow = index >= (currentPage - 1) * itemsPerPage && index < currentPage * itemsPerPage;
-                    item.parentElement.style.display = shouldShow ? 'block' : 'none';
-                });
-            }
-            
-            // 初始化显示第一页
-            updatePageInfo();
-            showCurrentPageItems();
-            
-            // 上一页按钮
-            prevButton.addEventListener('click', function() {
-                if (currentPage > 1) {
-                    currentPage--;
-                    updatePageInfo();
-                    showCurrentPageItems();
-                }
-            });
-            
-            // 下一页按钮
-            nextButton.addEventListener('click', function() {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    updatePageInfo();
-                    showCurrentPageItems();
-                }
-            });
-            
-            // 当目录项被激活时，确保它在当前页面中可见
-            function ensureActiveItemVisible(activeItem) {
-                if (!activeItem) return;
-                
-                // 找出激活项的索引
-                let activeIndex = -1;
-                tocItems.forEach((item, index) => {
-                    if (item === activeItem) {
-                        activeIndex = index;
-                    }
-                });
-                
-                if (activeIndex === -1) return;
-                
-                // 计算激活项应该在哪一页
-                const targetPage = Math.floor(activeIndex / itemsPerPage) + 1;
-                
-                // 如果不在当前页，切换到目标页
-                if (targetPage !== currentPage) {
-                    currentPage = targetPage;
-                    updatePageInfo();
-                    showCurrentPageItems();
-                }
-            }
-            
-            // 修改updateTocActiveStateByScroll函数，添加确保激活项可见的逻辑
-            const originalUpdateTocActiveState = updateTocActiveStateByScroll;
-            updateTocActiveStateByScroll = function(anchorPositions, headingToTocMap) {
-                originalUpdateTocActiveState(anchorPositions, headingToTocMap);
-                
-                // 找到当前激活的目录项
-                const activeItem = document.querySelector('.desktop-toc-content a.text-gray-900');
-                ensureActiveItemVisible(activeItem);
-            };
-        }
