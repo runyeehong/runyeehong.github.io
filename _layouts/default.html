@@ -195,11 +195,11 @@
         <!-- 桌面端目录 (固定在右侧) -->
         {% if page.toc %}
         <div id="desktop-toc" class="hidden md:block md:w-1/5 lg:w-1/5 flex-shrink-0">
-        <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
-        <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
-        <div class="border-b border-gray-200 mb-3"></div>
-        <div class="toc-content desktop-toc-content"></div>
-        </div>
+            <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
+                <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
+                <div class="border-b border-gray-200 mb-3"></div>
+                <div class="toc-content desktop-toc-content"></div>
+            </div>
         </div>
         {% endif %}
         </div>
@@ -311,12 +311,34 @@
             const tocContents = document.querySelectorAll('.toc-content');
             
             if (headings.length > 0 && tocContents.length > 0) {
+                // 创建锚点位置数组，用于存储每个标题的位置信息
+                const anchorPositions = [];
+                
+                // 预处理所有标题，确保它们有唯一ID并记录位置信息
+                headings.forEach((heading, index) => {
+                    if (!heading.id) {
+                        heading.id = `heading-${index}`;
+                    }
+                    
+                    // 记录标题的ID和offsetTop
+                    anchorPositions.push({
+                        id: heading.id,
+                        offsetTop: heading.offsetTop
+                    });
+                });
+                
+                // 按offsetTop排序锚点位置
+                anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
+                
                 const toc = document.createElement('ul');
                 toc.className = 'space-y-2 text-sm';
                 
                 let currentLevel = 0;
                 let currentList = toc;
                 let lists = [toc];
+                
+                // 创建标题到目录项的映射
+                const headingToTocMap = new Map();
                 
                 headings.forEach((heading, index) => {
                     // 获取标题级别
@@ -328,34 +350,28 @@
                     // 创建链接
                     const link = document.createElement('a');
                     link.textContent = heading.textContent;
-                    link.href = '#' + (heading.id || `heading-${index}`);
-                    link.className = 'text-gray-700 hover:text-gray-900 hover:underline block py-1 transition-colors duration-200 break-words';
-                    link.setAttribute('data-heading-id', heading.id || `heading-${index}`);
+                    link.setAttribute('data-target-id', heading.id);
+                    link.className = 'text-gray-700 hover:text-gray-900 hover:underline block py-1 transition-colors duration-200 break-words cursor-pointer';
+                    link.setAttribute('data-heading-id', heading.id);
                     
-                    // 如果标题没有ID，添加一个
-                    if (!heading.id) {
-                        heading.id = `heading-${index}`;
-                    }
+                    // 存储标题到目录项的映射关系
+                    headingToTocMap.set(heading.id, link);
                     
                     // 根据标题级别设置缩进
                     if (level > currentLevel) {
                         // 创建新的子列表
                         const newList = document.createElement('ul');
-                        // 移除所有边框，只保留基本样式
                         newList.className = 'pl-4 space-y-1 mt-1';
                         
-                        // 确保lists[currentLevel]存在且有lastChild
                         if (lists[currentLevel] && lists[currentLevel].lastChild) {
                             lists[currentLevel].lastChild.appendChild(newList);
                             lists.push(newList);
                             currentList = newList;
                             currentLevel = level;
                         } else {
-                            // 如果没有lastChild，直接添加到当前列表
                             lists[currentLevel].appendChild(item);
                         }
                     } else if (level < currentLevel) {
-                        // 回到上一级列表
                         currentLevel = level;
                         currentList = lists[level];
                     }
@@ -373,25 +389,21 @@
                             a.classList.remove('text-gray-900', 'font-medium', 'underline');
                         });
                         
-                        // 添加选中状态（增加下划线）
+                        // 添加选中状态
                         this.classList.add('text-gray-900', 'font-medium', 'underline');
                         
-                        const targetId = this.getAttribute('href').substring(1);
+                        const targetId = this.getAttribute('data-target-id');
                         const targetElement = document.getElementById(targetId);
                         
                         if (targetElement) {
-                            // 完全避免修改浏览器历史记录
-                            // 移除 history.replaceState 调用，不修改 URL
-                            
-                            // 改进：计算更精确的滚动位置
                             // 获取导航栏高度
                             const navHeight = document.querySelector('nav').offsetHeight;
-                            // 添加额外的偏移量，确保标题完全可见
+                            // 添加额外的偏移量
                             const extraOffset = 20;
                             
-                            // 使用 scrollTo 而不是修改 URL
+                            // 使用 scrollTo 滚动到目标位置
                             window.scrollTo({
-                                top: targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - extraOffset,
+                                top: targetElement.offsetTop - navHeight - extraOffset,
                                 behavior: 'smooth'
                             });
                             
@@ -411,122 +423,108 @@
                 
                 // 将生成的目录添加到页面中
                 tocContents.forEach(tocContent => {
-                    // 确保tocContent存在
                     if (tocContent) {
                         tocContent.innerHTML = '';
                         tocContent.appendChild(toc.cloneNode(true));
                     }
                 });
                 
-                // 使用 IntersectionObserver 监听标题元素的可见性
-                setupIntersectionObserver();
+                // 监听滚动事件，更新目录高亮状态
+                window.addEventListener('scroll', debounce(function() {
+                    updateTocActiveStateByScroll(anchorPositions, headingToTocMap);
+                }, 50));
+                
+                // 监听窗口大小变化，重新计算锚点位置
+                window.addEventListener('resize', debounce(function() {
+                    // 重新计算所有标题的位置
+                    headings.forEach((heading, index) => {
+                        const position = anchorPositions.find(pos => pos.id === heading.id);
+                        if (position) {
+                            position.offsetTop = heading.offsetTop;
+                        }
+                    });
+                    
+                    // 重新排序
+                    anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
+                    
+                    // 更新目录高亮状态
+                    updateTocActiveStateByScroll(anchorPositions, headingToTocMap);
+                }, 100));
+                
+                // 监听图片加载完成事件，因为图片加载会改变布局
+                document.querySelectorAll('.prose img').forEach(img => {
+                    img.addEventListener('load', debounce(function() {
+                        // 重新计算所有标题的位置
+                        headings.forEach((heading, index) => {
+                            const position = anchorPositions.find(pos => pos.id === heading.id);
+                            if (position) {
+                                position.offsetTop = heading.offsetTop;
+                            }
+                        });
+                        
+                        // 重新排序
+                        anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
+                        
+                        // 更新目录高亮状态
+                        updateTocActiveStateByScroll(anchorPositions, headingToTocMap);
+                    }, 100));
+                });
+                
+                // 初始化目录高亮状态
+                setTimeout(() => {
+                    updateTocActiveStateByScroll(anchorPositions, headingToTocMap);
+                }, 100);
             }
         }
         
-        // 使用 IntersectionObserver 监听标题元素的可见性
-        function setupIntersectionObserver() {
-            const headings = document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4');
-            if (headings.length === 0) return;
+        // 根据滚动位置更新目录高亮状态
+        function updateTocActiveStateByScroll(anchorPositions, headingToTocMap) {
+            if (!anchorPositions || anchorPositions.length === 0) return;
             
-            // 创建一个映射，存储每个标题的可见性状态
-            const headingVisibility = new Map();
-            headings.forEach(heading => {
-                headingVisibility.set(heading.id, false);
-            });
-            
-            // 配置 IntersectionObserver
-            const navHeight = document.querySelector('nav').offsetHeight;
-            const observerOptions = {
-                root: null, // 使用视口作为根
-                rootMargin: `-${navHeight + 10}px 0px -70% 0px`, // 顶部减去导航栏高度，底部减少观察区域
-                threshold: 0 // 只要有一部分可见就触发
-            };
-            
-            // 创建 IntersectionObserver 实例
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    // 更新标题的可见性状态
-                    headingVisibility.set(entry.target.id, entry.isIntersecting);
-                });
-                
-                // 找到第一个可见的标题
-                let visibleHeadingId = null;
-                for (const [id, isVisible] of headingVisibility.entries()) {
-                    if (isVisible) {
-                        visibleHeadingId = id;
-                        break;
-                    }
-                }
-                
-                // 如果没有可见的标题，尝试根据滚动位置确定最接近的标题
-                if (!visibleHeadingId) {
-                    visibleHeadingId = findClosestHeadingByScroll(headings);
-                }
-                
-                // 更新目录选中状态
-                if (visibleHeadingId) {
-                    updateTocActiveItem(visibleHeadingId);
-                }
-            }, observerOptions);
-            
-            // 观察所有标题元素
-            headings.forEach(heading => {
-                observer.observe(heading);
-            });
-            
-            // 添加滚动监听作为备用，处理快速滚动的情况
-            window.addEventListener('scroll', debounce(function() {
-                // 如果没有通过 IntersectionObserver 找到可见标题，使用滚动位置来确定
-                const visibleHeadingId = findClosestHeadingByScroll(headings);
-                if (visibleHeadingId) {
-                    updateTocActiveItem(visibleHeadingId);
-                }
-            }, 50)); // 减少防抖时间，使响应更快
-        }
-        
-        // 根据滚动位置找到最接近的标题
-        function findClosestHeadingByScroll(headings) {
             const scrollPosition = window.scrollY;
             const navHeight = document.querySelector('nav').offsetHeight;
-            const scrollThreshold = scrollPosition + navHeight + 50; // 添加一些偏移量
+            const scrollThreshold = scrollPosition + navHeight + 10;
             
-            let closestHeading = null;
-            let closestDistance = Infinity;
+            // 找到当前滚动位置对应的标题
+            let activeAnchorId = null;
             
-            headings.forEach(heading => {
-                const headingPosition = heading.offsetTop;
-                const distance = Math.abs(headingPosition - scrollPosition);
-                
-                // 如果标题在当前滚动位置之上或接近当前位置
-                if (headingPosition <= scrollThreshold && distance < closestDistance) {
-                    closestHeading = heading;
-                    closestDistance = distance;
+            // 查找第一个位置大于当前滚动位置的锚点
+            for (let i = 0; i < anchorPositions.length; i++) {
+                if (anchorPositions[i].offsetTop > scrollThreshold) {
+                    // 如果找到了，使用前一个锚点
+                    activeAnchorId = i > 0 ? anchorPositions[i - 1].id : anchorPositions[0].id;
+                    break;
                 }
-            });
+            }
             
-            return closestHeading ? closestHeading.id : null;
-        }
-        
-        // 更新目录中的活动项
-        function updateTocActiveItem(headingId) {
-            document.querySelectorAll('.toc-content a').forEach(a => {
-                a.classList.remove('text-gray-900', 'font-medium', 'underline');
-                if (a.getAttribute('data-heading-id') === headingId) {
-                    a.classList.add('text-gray-900', 'font-medium', 'underline');
+            // 如果滚动到了底部，使用最后一个锚点
+            if (!activeAnchorId && anchorPositions.length > 0) {
+                activeAnchorId = anchorPositions[anchorPositions.length - 1].id;
+            }
+            
+            // 更新目录高亮状态
+            if (activeAnchorId) {
+                document.querySelectorAll('.toc-content a').forEach(a => {
+                    a.classList.remove('text-gray-900', 'font-medium', 'underline');
+                });
+                
+                // 使用映射直接获取对应的目录项
+                const activeTocItem = headingToTocMap.get(activeAnchorId);
+                if (activeTocItem) {
+                    activeTocItem.classList.add('text-gray-900', 'font-medium', 'underline');
                     
-                    // 确保活动项在目录视图中可见（自动滚动）
-                    const tocContainer = a.closest('.toc-content');
+                    // 确保活动项在目录视图中可见
+                    const tocContainer = activeTocItem.closest('.toc-content');
                     if (tocContainer) {
                         const containerRect = tocContainer.getBoundingClientRect();
-                        const linkRect = a.getBoundingClientRect();
+                        const linkRect = activeTocItem.getBoundingClientRect();
                         
-                        // 如果链接在容器视图之外，滚动容器
                         if (linkRect.top < containerRect.top || linkRect.bottom > containerRect.bottom) {
-                            a.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            activeTocItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                         }
                     }
                 }
-            });
+            }
         }
         
         // 原有的 updateTocActiveState 函数可以移除，由新的 IntersectionObserver 逻辑替代
@@ -642,3 +640,97 @@
 </style>
 </body>
 </html>
+
+// 为桌面端目录添加分页功能
+        function setupDesktopTocPagination() {
+            const desktopTocContent = document.querySelector('.desktop-toc-content');
+            const paginationContainer = document.querySelector('.toc-pagination');
+            if (!desktopTocContent || !paginationContainer) return;
+            
+            const tocItems = desktopTocContent.querySelectorAll('a');
+            if (tocItems.length <= 10) return; // 如果目录项不多，不需要分页
+            
+            // 显示分页控制
+            paginationContainer.classList.remove('hidden');
+            paginationContainer.classList.add('flex');
+            
+            const prevButton = paginationContainer.querySelector('.toc-prev-page');
+            const nextButton = paginationContainer.querySelector('.toc-next-page');
+            const pageInfo = paginationContainer.querySelector('.toc-page-info');
+            
+            const itemsPerPage = 10;
+            const totalPages = Math.ceil(tocItems.length / itemsPerPage);
+            let currentPage = 1;
+            
+            // 更新页码信息
+            function updatePageInfo() {
+                pageInfo.textContent = `${currentPage}/${totalPages}`;
+                prevButton.disabled = currentPage === 1;
+                nextButton.disabled = currentPage === totalPages;
+            }
+            
+            // 显示当前页的目录项
+            function showCurrentPageItems() {
+                tocItems.forEach((item, index) => {
+                    const shouldShow = index >= (currentPage - 1) * itemsPerPage && index < currentPage * itemsPerPage;
+                    item.parentElement.style.display = shouldShow ? 'block' : 'none';
+                });
+            }
+            
+            // 初始化显示第一页
+            updatePageInfo();
+            showCurrentPageItems();
+            
+            // 上一页按钮
+            prevButton.addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePageInfo();
+                    showCurrentPageItems();
+                }
+            });
+            
+            // 下一页按钮
+            nextButton.addEventListener('click', function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePageInfo();
+                    showCurrentPageItems();
+                }
+            });
+            
+            // 当目录项被激活时，确保它在当前页面中可见
+            function ensureActiveItemVisible(activeItem) {
+                if (!activeItem) return;
+                
+                // 找出激活项的索引
+                let activeIndex = -1;
+                tocItems.forEach((item, index) => {
+                    if (item === activeItem) {
+                        activeIndex = index;
+                    }
+                });
+                
+                if (activeIndex === -1) return;
+                
+                // 计算激活项应该在哪一页
+                const targetPage = Math.floor(activeIndex / itemsPerPage) + 1;
+                
+                // 如果不在当前页，切换到目标页
+                if (targetPage !== currentPage) {
+                    currentPage = targetPage;
+                    updatePageInfo();
+                    showCurrentPageItems();
+                }
+            }
+            
+            // 修改updateTocActiveStateByScroll函数，添加确保激活项可见的逻辑
+            const originalUpdateTocActiveState = updateTocActiveStateByScroll;
+            updateTocActiveStateByScroll = function(anchorPositions, headingToTocMap) {
+                originalUpdateTocActiveState(anchorPositions, headingToTocMap);
+                
+                // 找到当前激活的目录项
+                const activeItem = document.querySelector('.desktop-toc-content a.text-gray-900');
+                ensureActiveItemVisible(activeItem);
+            };
+        }
