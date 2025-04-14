@@ -168,7 +168,7 @@
         
         <!-- 移动端目录按钮 (固定在右下角) -->
         {% if page.toc %}
-        <button id="mobile-toc-button" class="md:hidden fixed bottom-6 right-6 bg-gray-800 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg z-50 hidden">
+        <button id="mobile-toc-button" class="md:hidden fixed bottom-12 right-6 bg-gray-800 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg z-50 hidden">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
         </svg>
@@ -472,7 +472,7 @@
                     }, 100));
                 });
                 
-                // 初始化目录高亮状态
+                // 初始化目录高亮状态 - 保持原来的100ms
                 setTimeout(() => {
                     updateTocActiveStateByScroll(anchorPositions, headingToTocMap);
                 }, 100);
@@ -570,38 +570,42 @@
         color: #9CA3AF; /* 更浅的灰色 */
     }
     
+    /* 目录悬停样式 - 调深颜色、加粗、添加背景色 */
     .toc-content a:hover {
-        color: #111827;
-        background-color: rgba(17, 24, 39, 0.05);
+        color: #111827 !important;
+        font-weight: 600 !important;
+        background-color: rgba(17, 24, 39, 0.05) !important;
     }
     
     /* 桌面端目录悬停颜色 */
     .desktop-toc-content a:hover {
-        color: #6B7280; /* 悬停时的颜色也相应调浅 */
+        color: #4B5563 !important; /* 悬停时的颜色与选中态一致 */
     }
     
-    /* 选中状态 - 加粗并显示下划线 */
+    /* 选中状态 - 加粗并显示背景色 */
     .toc-content a.text-gray-900 {
-        color: #111827;
-        font-weight: 600;
+        color: #111827 !important;
+        font-weight: 600 !important;
+        background-color: rgba(17, 24, 39, 0.05) !important;
     }
     
     /* 桌面端目录选中状态 */
     .desktop-toc-content a.text-gray-900 {
-        color: #4B5563; /* 选中时的颜色也相应调浅 */
+        color: #4B5563 !important; /* 选中时的颜色 */
     }
     
-    .toc-content a.underline {
-        text-decoration: underline;
-        text-underline-offset: 2px;
+    /* 移动端目录下划线 */
+    .toc-content a.underline:not(.desktop-toc-content a.underline) {
+        text-decoration: underline !important;
+        text-underline-offset: 2px !important;
     }
     
-    /* 移动端目录动画 */
-    #mobile-toc-container {
-        transition: transform 0.3s ease-in-out;
+    /* 桌面端目录取消下划线 */
+    .desktop-toc-content a.underline {
+        text-decoration: none !important;
     }
     
-    /* 标题高亮效果 */
+    /* 其他样式保持不变 */
     .prose h1, .prose h2, .prose h3, .prose h4 {
         transition: background-color 0.5s ease;
     }
