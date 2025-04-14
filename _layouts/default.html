@@ -176,6 +176,7 @@
         {% endif %}
         
         <!-- 移动端目录 (从底部弹出) -->
+        <!-- 移动端目录 (从底部弹出) -->
         {% if page.toc %}
         <div id="mobile-toc" class="md:hidden fixed inset-0 z-50 hidden">
         <div class="bg-white rounded-t-lg shadow-xl absolute bottom-0 left-0 right-0 max-h-[55vh] overflow-y-auto transform transition-transform duration-300 translate-y-full" id="mobile-toc-container">
@@ -185,6 +186,7 @@
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         </div>
+        <div class="border-b border-gray-200 mx-4"></div>
         <div class="p-4 toc-content"></div>
         </div>
         </div>
@@ -194,8 +196,9 @@
         {% if page.toc %}
         <div id="desktop-toc" class="hidden md:block md:w-1/5 lg:w-1/5 flex-shrink-0">
         <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
-        <h3 class="text-base font-medium mb-3 text-gray-900">文章目录</h3>
-        <div class="toc-content"></div>
+        <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
+        <div class="border-b border-gray-200 mb-3"></div>
+        <div class="toc-content desktop-toc-content"></div>
         </div>
         </div>
         {% endif %}
@@ -338,8 +341,8 @@
                     if (level > currentLevel) {
                         // 创建新的子列表
                         const newList = document.createElement('ul');
-                        // 只为一级标题添加左侧边框
-                        newList.className = level === 1 ? 'pl-4 space-y-1 mt-1 border-l border-gray-200' : 'pl-4 space-y-1 mt-1';
+                        // 移除所有边框，只保留基本样式
+                        newList.className = 'pl-4 space-y-1 mt-1';
                         
                         // 确保lists[currentLevel]存在且有lastChild
                         if (lists[currentLevel] && lists[currentLevel].lastChild) {
@@ -377,18 +380,18 @@
                         const targetElement = document.getElementById(targetId);
                         
                         if (targetElement) {
-                            // 使用 replaceState 避免将锚点添加到浏览器历史记录
-                            history.replaceState(null, null, window.location.pathname + window.location.search);
+                            // 完全避免修改浏览器历史记录
+                            // 移除 history.replaceState 调用，不修改 URL
                             
                             // 改进：计算更精确的滚动位置
                             // 获取导航栏高度
                             const navHeight = document.querySelector('nav').offsetHeight;
                             // 添加额外的偏移量，确保标题完全可见
                             const extraOffset = 20;
-                            const targetPosition = window.pageYOffset + targetElement.getBoundingClientRect().top - navHeight - extraOffset;
                             
+                            // 使用 scrollTo 而不是修改 URL
                             window.scrollTo({
-                                top: targetPosition,
+                                top: targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - extraOffset,
                                 behavior: 'smooth'
                             });
                             
@@ -547,10 +550,12 @@
     .toc-content ul {
         list-style: none;
         padding-left: 0;
+        border: none; /* 确保没有边框 */
     }
     
     .toc-content li {
         margin-bottom: 0.25rem;
+        border: none; /* 确保没有边框 */
     }
     
     .toc-content a {
@@ -562,15 +567,30 @@
         transition: all 0.2s;
     }
     
+    /* 桌面端目录颜色调浅 */
+    .desktop-toc-content a {
+        color: #9CA3AF; /* 更浅的灰色 */
+    }
+    
     .toc-content a:hover {
         color: #111827;
         background-color: rgba(17, 24, 39, 0.05);
+    }
+    
+    /* 桌面端目录悬停颜色 */
+    .desktop-toc-content a:hover {
+        color: #6B7280; /* 悬停时的颜色也相应调浅 */
     }
     
     /* 选中状态 - 加粗并显示下划线 */
     .toc-content a.text-gray-900 {
         color: #111827;
         font-weight: 600;
+    }
+    
+    /* 桌面端目录选中状态 */
+    .desktop-toc-content a.text-gray-900 {
+        color: #4B5563; /* 选中时的颜色也相应调浅 */
     }
     
     .toc-content a.underline {
