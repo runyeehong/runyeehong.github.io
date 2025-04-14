@@ -152,12 +152,25 @@
         {% if page.title %}
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-gray-900">{{ page.title }}</h1>
+            <!-- 只有在页面设置了toc:true时才显示目录按钮 -->
+            {% if page.toc %}
+            <button id="toc-button" class="md:hidden bg-white text-gray-700 border border-gray-300 rounded-md px-3 py-1 text-sm flex items-center">
+                目录 <svg class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            {% endif %}
         </div>
         {% endif %}
         
         <!-- 文章内容和目录 -->
         <!-- 修改文章内容和目录的占比 -->
         <div class="flex flex-col md:flex-row gap-8">
+        <!-- 文章内容 -->
+        <div class="flex-1">
+            <div class="prose max-w-none">
+                {{ content }}
+            </div>
+        </div>
+        
         <!-- 移动端目录按钮 (固定在右下角) -->
         {% if page.toc %}
         <button id="mobile-toc-button" class="md:hidden fixed bottom-6 right-6 bg-gray-800 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg z-50 hidden">
