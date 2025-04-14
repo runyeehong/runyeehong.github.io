@@ -152,12 +152,6 @@
         {% if page.title %}
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-gray-900">{{ page.title }}</h1>
-            <!-- 只有在页面设置了toc:true时才显示目录按钮 -->
-            {% if page.toc %}
-            <button id="toc-button" class="md:hidden bg-white text-gray-700 border border-gray-300 rounded-md px-3 py-1 text-sm flex items-center">
-                目录 <svg class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-            {% endif %}
         </div>
         {% endif %}
         
@@ -166,7 +160,7 @@
         <div class="flex flex-col md:flex-row gap-8">
         <!-- 移动端目录按钮 (固定在右下角) -->
         {% if page.toc %}
-        <button id="mobile-toc-button" class="md:hidden fixed bottom-6 right-6 bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg z-50">
+        <button id="mobile-toc-button" class="md:hidden fixed bottom-6 right-6 bg-gray-800 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg z-50 hidden">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
         </svg>
@@ -190,20 +184,13 @@
         
         <!-- 桌面端目录 (固定在右侧) -->
         {% if page.toc %}
-        <div class="hidden md:block md:w-1/5 lg:w-1/5 flex-shrink-0">
+        <div id="desktop-toc" class="hidden md:block md:w-1/5 lg:w-1/5 flex-shrink-0">
         <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
         <h3 class="text-base font-medium mb-3 text-gray-900 border-b pb-2">文章目录</h3>
-        <div class="toc-content border-l pl-3"></div>
+        <div class="toc-content"></div>
         </div>
         </div>
         {% endif %}
-        
-        <!-- 文章内容 -->
-        <div class="flex-1 {% if page.toc %}md:w-4/5 lg:w-4/5{% endif %}">
-        <div class="prose max-w-none">
-        {{ content }}
-        </div>
-        </div>
         </div>
     </div>
 
@@ -246,39 +233,64 @@
         const mobileToc = document.getElementById('mobile-toc');
         const mobileTocContainer = document.getElementById('mobile-toc-container');
         const closeToc = document.getElementById('close-toc');
+        const desktopToc = document.getElementById('desktop-toc');
         
-        if (mobileTocButton && mobileToc) {
+        // 检查是否有目录内容
+        function hasTocContent() {
+            const headings = document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4');
+            return headings.length > 0;
+        }
+        
+        // 如果有目录内容，显示目录相关元素
+        if (hasTocContent()) {
+            // 显示移动端目录按钮
+            if (mobileTocButton) {
+                mobileTocButton.classList.remove('hidden');
+            }
+            
             // 生成目录内容
             generateTableOfContents();
             
-            // 打开目录
-            mobileTocButton.addEventListener('click', function() {
-                mobileToc.classList.remove('hidden');
-                // 使用动画效果显示目录
-                setTimeout(() => {
-                    mobileTocContainer.classList.remove('translate-y-full');
-                }, 10);
-                document.body.style.overflow = 'hidden'; // 防止背景滚动
-            });
-            
-            // 关闭目录
-            closeToc.addEventListener('click', function() {
-                closeTocMenu();
-            });
-            
-            // 点击背景关闭目录
-            mobileToc.addEventListener('click', function(e) {
-                if (e.target === mobileToc) {
+            if (mobileTocButton && mobileToc) {
+                // 打开目录
+                mobileTocButton.addEventListener('click', function() {
+                    mobileToc.classList.remove('hidden');
+                    // 使用动画效果显示目录
+                    setTimeout(() => {
+                        mobileTocContainer.classList.remove('translate-y-full');
+                    }, 10);
+                    document.body.style.overflow = 'hidden'; // 防止背景滚动
+                });
+                
+                // 关闭目录
+                closeToc.addEventListener('click', function() {
                     closeTocMenu();
+                });
+                
+                // 点击背景关闭目录
+                mobileToc.addEventListener('click', function(e) {
+                    if (e.target === mobileToc) {
+                        closeTocMenu();
+                    }
+                });
+                
+                function closeTocMenu() {
+                    mobileTocContainer.classList.add('translate-y-full');
+                    setTimeout(() => {
+                        mobileToc.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }, 300);
                 }
-            });
+            }
+        } else {
+            // 如果没有目录内容，隐藏目录相关元素
+            if (desktopToc) {
+                desktopToc.classList.add('hidden');
+                desktopToc.classList.remove('md:block');
+            }
             
-            function closeTocMenu() {
-                mobileTocContainer.classList.add('translate-y-full');
-                setTimeout(() => {
-                    mobileToc.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }, 300);
+            if (mobileTocButton) {
+                mobileTocButton.classList.add('hidden');
             }
         }
         
@@ -306,7 +318,7 @@
                     const link = document.createElement('a');
                     link.textContent = heading.textContent;
                     link.href = '#' + (heading.id || `heading-${index}`);
-                    link.className = 'text-gray-700 hover:text-primary hover:underline block py-1 transition-colors duration-200';
+                    link.className = 'text-gray-700 hover:text-gray-900 hover:underline block py-1 transition-colors duration-200 break-words';
                     link.setAttribute('data-heading-id', heading.id || `heading-${index}`);
                     
                     // 如果标题没有ID，添加一个
@@ -318,7 +330,8 @@
                     if (level > currentLevel) {
                         // 创建新的子列表
                         const newList = document.createElement('ul');
-                        newList.className = 'pl-4 space-y-1 mt-1 border-l border-gray-200';
+                        // 只为一级标题添加左侧边框
+                        newList.className = level === 1 ? 'pl-4 space-y-1 mt-1 border-l border-gray-200' : 'pl-4 space-y-1 mt-1';
                         
                         // 确保lists[currentLevel]存在且有lastChild
                         if (lists[currentLevel] && lists[currentLevel].lastChild) {
@@ -346,26 +359,29 @@
                         
                         // 移除所有目录项的选中状态
                         document.querySelectorAll('.toc-content a').forEach(a => {
-                            a.classList.remove('text-primary', 'font-medium');
+                            a.classList.remove('text-gray-900', 'font-medium');
                         });
                         
                         // 添加选中状态
-                        this.classList.add('text-primary', 'font-medium');
+                        this.classList.add('text-gray-900', 'font-medium');
                         
                         const targetId = this.getAttribute('href').substring(1);
                         const targetElement = document.getElementById(targetId);
                         
                         if (targetElement) {
-                            // 平滑滚动到目标位置
+                            // 平滑滚动到目标位置，调整偏移量使标题位于页面顶部
+                            const offset = 120; // 增加偏移量，确保标题在视窗内可见
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
+                            
                             window.scrollTo({
-                                top: targetElement.offsetTop - 100,
+                                top: targetPosition,
                                 behavior: 'smooth'
                             });
                             
                             // 高亮目标标题2秒
-                            targetElement.classList.add('bg-yellow-100', 'transition-colors', 'duration-500');
+                            targetElement.classList.add('bg-gray-100', 'transition-colors', 'duration-500');
                             setTimeout(() => {
-                                targetElement.classList.remove('bg-yellow-100');
+                                targetElement.classList.remove('bg-gray-100');
                             }, 2000);
                             
                             // 如果是移动端，关闭目录
@@ -412,9 +428,9 @@
             // 更新目录选中状态
             if (currentHeadingId) {
                 document.querySelectorAll('.toc-content a').forEach(a => {
-                    a.classList.remove('text-primary', 'font-medium');
+                    a.classList.remove('text-gray-900', 'font-medium');
                     if (a.getAttribute('data-heading-id') === currentHeadingId) {
-                        a.classList.add('text-primary', 'font-medium');
+                        a.classList.add('text-gray-900', 'font-medium');
                     }
                 });
             }
@@ -455,13 +471,13 @@
     }
     
     .toc-content a:hover {
-        color: #3B82F6;
-        background-color: rgba(59, 130, 246, 0.05);
+        color: #111827;
+        background-color: rgba(17, 24, 39, 0.05);
     }
     
     /* 选中状态 */
-    .toc-content a.text-primary {
-        color: #3B82F6;
+    .toc-content a.text-gray-900 {
+        color: #111827;
         font-weight: 500;
     }
     
