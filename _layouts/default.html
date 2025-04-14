@@ -72,7 +72,7 @@
                 @apply block py-1 px-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 hover:font-medium rounded transition-all duration-200;
             }
             .toc-link.active {
-                @apply bg-gray-100 text-gray-900 font-medium;
+                @apply bg-gray-100 text-blue-600 font-medium;
             }
             .tag-crm { @apply tag bg-orange-100 text-orange-800; }
             .tag-ai { @apply tag bg-purple-100 text-purple-800; }
@@ -318,25 +318,12 @@
             const tocContents = document.querySelectorAll('.toc-content');
             
             if (headings.length > 0 && tocContents.length > 0) {
-                // 创建锚点位置数组，用于存储每个标题的位置信息
-                const anchorPositions = [];
-                
-                // 预处理所有标题，确保它们有唯一ID并记录位置信息
+                // 为所有标题添加唯一ID
                 headings.forEach((heading, index) => {
-                    // 如果标题没有ID，添加一个
                     if (!heading.id) {
                         heading.id = `heading-${index}`;
                     }
-                    
-                    // 记录标题的ID和offsetTop
-                    anchorPositions.push({
-                        id: heading.id,
-                        offsetTop: heading.offsetTop
-                    });
                 });
-                
-                // 按offsetTop排序锚点位置
-                anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
                 
                 const toc = document.createElement('ul');
                 toc.className = 'space-y-2 text-sm';
@@ -358,9 +345,8 @@
                     // 创建链接
                     const link = document.createElement('a');
                     link.textContent = heading.textContent;
-                    link.setAttribute('data-target-id', heading.id);
-                    // 使用统一的类名
-                    link.className = 'toc-link';
+                    link.href = `#${heading.id}`;
+                    link.className = 'toc-link block py-1 hover:text-blue-500 transition-colors';
                     link.setAttribute('data-heading-id', heading.id);
                     
                     // 存储标题到目录项的映射关系
@@ -393,15 +379,7 @@
                     link.addEventListener('click', function(e) {
                         e.preventDefault();
                         
-                        // 移除所有目录项的选中状态
-                        document.querySelectorAll('.toc-link').forEach(a => {
-                            a.classList.remove('active');
-                        });
-                        
-                        // 添加选中状态
-                        this.classList.add('active');
-                        
-                        const targetId = this.getAttribute('data-target-id');
+                        const targetId = heading.id;
                         const targetElement = document.getElementById(targetId);
                         
                         if (targetElement) {
@@ -410,9 +388,13 @@
                             // 添加额外的偏移量
                             const extraOffset = 20;
                             
+                            // 计算正确的滚动位置
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                            const offsetPosition = targetPosition - navHeight - extraOffset;
+                            
                             // 滚动到目标位置
                             window.scrollTo({
-                                top: targetElement.offsetTop - navHeight - extraOffset,
+                                top: offsetPosition,
                                 behavior: 'smooth'
                             });
                             
@@ -421,6 +403,12 @@
                             setTimeout(() => {
                                 targetElement.classList.remove('bg-gray-100');
                             }, 2000);
+                            
+                            // 更新目录高亮状态
+                            document.querySelectorAll('.toc-link').forEach(link => {
+                                link.classList.remove('active');
+                            });
+                            link.classList.add('active');
                             
                             // 如果是移动端，关闭目录
                             if (mobileToc && !mobileToc.classList.contains('hidden')) {
@@ -438,98 +426,96 @@
                     }
                 });
                 
-                // 监听滚动事件，更新目录高亮状态
-                window.addEventListener('scroll', debounce(function() {
-                    updateTocActiveState(anchorPositions, headingToTocMap);
-                }, 50));
+                // 使用IntersectionObserver监听标题元素的可见性
+                const navHeight = document.querySelector('nav').offsetHeight;
+                const observerOptions = {
+                    root: null, // 使用视口作为根
+                    rootMargin: `-${navHeight + 20}px 0px -70% 0px`, // 考虑导航栏高度和额外偏移，底部设置负值以提前触发
+                    threshold: [0, 0.1, 0.5] // 使用多个阈值以提高精度
+                };
                 
-                // 监听窗口大小变化，重新计算锚点位置
-                window.addEventListener('resize', debounce(function() {
-                    // 重新计算所有标题的位置
-                    headings.forEach((heading, index) => {
-                        const position = anchorPositions.find(pos => pos.id === heading.id);
-                        if (position) {
-                            position.offsetTop = heading.offsetTop;
-                        }
-                    });
+                // 创建观察者实例
+                const observer = new IntersectionObserver((entries) => {
+                    // 找到最靠近顶部的可见标题
+                    let visibleHeadings = entries.filter(entry => entry.isIntersecting);
                     
-                    // 重新排序
-                    anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
-                    
-                    // 更新目录高亮状态
-                    updateTocActiveState(anchorPositions, headingToTocMap);
-                }, 100));
-                
-                // 监听图片加载完成事件，因为图片加载会改变布局
-                document.querySelectorAll('.prose img').forEach(img => {
-                    img.addEventListener('load', debounce(function() {
-                        // 重新计算所有标题的位置
-                        headings.forEach((heading, index) => {
-                            const position = anchorPositions.find(pos => pos.id === heading.id);
-                            if (position) {
-                                position.offsetTop = heading.offsetTop;
-                            }
+                    if (visibleHeadings.length > 0) {
+                        // 按照在页面中的位置排序
+                        visibleHeadings.sort((a, b) => {
+                            return a.boundingClientRect.top - b.boundingClientRect.top;
                         });
                         
-                        // 重新排序
-                        anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
+                        // 获取最靠近顶部的可见标题
+                        const topVisibleHeading = visibleHeadings[0].target;
                         
                         // 更新目录高亮状态
-                        updateTocActiveState(anchorPositions, headingToTocMap);
-                    }, 100));
-                });
-                
-                // 初始化目录高亮状态
-                setTimeout(() => {
-                    updateTocActiveState(anchorPositions, headingToTocMap);
-                }, 100);
-                
-                // 页面加载完成后再次更新目录高亮状态
-                window.addEventListener('load', function() {
-                    // 重新计算所有标题的位置
-                    headings.forEach((heading, index) => {
-                        const position = anchorPositions.find(pos => pos.id === heading.id);
-                        if (position) {
-                            position.offsetTop = heading.offsetTop;
+                        document.querySelectorAll('.toc-link').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        
+                        const activeLink = document.querySelector(`.toc-link[data-heading-id="${topVisibleHeading.id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                            
+                            // 确保在桌面端目录中可见
+                            if (window.innerWidth >= 768) { // md breakpoint
+                                const desktopTocContent = document.querySelector('.desktop-toc-content');
+                                if (desktopTocContent) {
+                                    const activeLinkPosition = activeLink.getBoundingClientRect().top;
+                                    const tocContainerPosition = desktopTocContent.getBoundingClientRect().top;
+                                    const scrollPosition = activeLinkPosition - tocContainerPosition - 100; // 100px buffer
+                                    
+                                    if (scrollPosition < 0 || scrollPosition > desktopTocContent.clientHeight) {
+                                        desktopTocContent.scrollTop += scrollPosition;
+                                    }
+                                }
+                            }
                         }
-                    });
-                    
-                    // 重新排序
-                    anchorPositions.sort((a, b) => a.offsetTop - b.offsetTop);
-                    
-                    // 更新目录高亮状态
-                    updateTocActiveState(anchorPositions, headingToTocMap);
+                    }
+                }, observerOptions);
+                
+                // 观察所有标题元素
+                headings.forEach(heading => {
+                    observer.observe(heading);
                 });
+                
+                // 不再需要添加内联样式，因为我们已经在Tailwind样式中定义了.toc-link.active
+                
+                // 初始化目录高亮状态 - 手动触发一次检查
+                setTimeout(() => {
+                    // 找到当前视口中最靠近顶部的标题
+                    const headingElements = Array.from(headings);
+                    if (headingElements.length > 0) {
+                        // 获取所有标题的位置信息
+                        const headingPositions = headingElements.map(heading => {
+                            const rect = heading.getBoundingClientRect();
+                            return {
+                                id: heading.id,
+                                top: rect.top + window.scrollY - navHeight - 30
+                            };
+                        });
+                        
+                        // 找到当前滚动位置之后的第一个标题
+                        const currentScrollPosition = window.scrollY;
+                        const currentHeading = headingPositions.find(h => h.top > currentScrollPosition) || headingPositions[0];
+                        
+                        if (currentHeading) {
+                            // 高亮对应的目录项
+                            document.querySelectorAll('.toc-link').forEach(link => {
+                                link.classList.remove('active');
+                            });
+                            
+                            const activeLink = document.querySelector(`.toc-link[data-heading-id="${currentHeading.id}"]`);
+                            if (activeLink) {
+                                activeLink.classList.add('active');
+                            }
+                        }
+                    }
+                }, 300);
             }
         }
         
-        // 根据滚动位置更新目录高亮状态
-        function updateTocActiveState(anchorPositions, headingToTocMap) {
-            const scrollPosition = window.scrollY + document.querySelector('nav').offsetHeight + 20;
-            let activeHeadingId = null;
-            
-            // 找到当前滚动位置对应的标题
-            // 从后往前遍历，找到第一个位置小于当前滚动位置的标题
-            for (let i = anchorPositions.length - 1; i >= 0; i--) {
-                if (scrollPosition >= anchorPositions[i].offsetTop) {
-                    activeHeadingId = anchorPositions[i].id;
-                    break;
-                }
-            }
-            
-            // 更新所有目录项的状态
-            document.querySelectorAll('.toc-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // 如果找到活动标题，高亮对应的目录项
-            if (activeHeadingId) {
-                const activeLink = document.querySelector(`.toc-link[data-heading-id="${activeHeadingId}"]`);
-                if (activeLink) {
-                    activeLink.classList.add('active');
-                }
-            }
-        }
+        // 不再需要单独的updateTocActiveState函数，因为使用了IntersectionObserver
         
         // 防抖函数
         function debounce(func, wait) {
@@ -562,7 +548,7 @@
                 @apply block py-1 px-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 hover:font-medium rounded transition-all duration-200;
             }
             .toc-link.active {
-                @apply bg-gray-100 text-gray-900 font-medium;
+                @apply bg-gray-100 text-blue-600 font-medium;
             }
             .tag-crm { @apply tag bg-orange-100 text-orange-800; }
             .tag-ai { @apply tag bg-purple-100 text-purple-800; }
@@ -609,13 +595,7 @@
                 @apply bg-transparent text-white p-0;
             }
             
-            /* 添加目录链接样式 */
-            .toc-link {
-                @apply block py-1 text-gray-600 hover:text-gray-900 transition-colors duration-200 cursor-pointer;
-            }
-            .toc-link.active {
-                @apply text-blue-600 font-medium;
-            }
+            /* 移除重复的目录链接样式，已在上方定义 */
             
             /* 移除目录滚动条 */
             .no-scrollbar {
