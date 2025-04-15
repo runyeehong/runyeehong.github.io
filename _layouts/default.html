@@ -425,16 +425,20 @@
         function setupScrollSpy(headingMap) {
             let ticking = false;
             const desktopToc = document.querySelector('.desktop-toc-content');
+            let lastScrollPosition = 0;
             
             function onScroll() {
                 if (!ticking) {
                     window.requestAnimationFrame(() => {
                         const navHeight = document.querySelector('nav').offsetHeight;
                         const scrollPos = window.scrollY + navHeight + 24; // 导航栏高度 + 额外偏移
+                        const isScrollingUp = window.scrollY < lastScrollPosition;
+                        lastScrollPosition = window.scrollY;
                         
                         // 找到当前可见的标题
                         let currentHeading = null;
                         let lastVisibleHeading = null;
+                        let firstVisibleHeading = null;
                         
                         for (const [id, heading] of headingMap) {
                             const rect = heading.getBoundingClientRect();
@@ -442,6 +446,9 @@
                             
                             if (absoluteTop <= scrollPos) {
                                 lastVisibleHeading = id;
+                                if (!firstVisibleHeading) {
+                                    firstVisibleHeading = id;
+                                }
                                 if (rect.top <= navHeight + 24) {
                                     currentHeading = id;
                                 }
@@ -449,8 +456,12 @@
                         }
                         
                         // 如果没有找到当前可见的标题，使用最后一个可见的标题
-                        if (!currentHeading && lastVisibleHeading) {
-                            currentHeading = lastVisibleHeading;
+                        if (!currentHeading) {
+                            if (isScrollingUp && firstVisibleHeading) {
+                                currentHeading = firstVisibleHeading;
+                            } else if (lastVisibleHeading) {
+                                currentHeading = lastVisibleHeading;
+                            }
                         }
                         
                         if (currentHeading) {
@@ -484,6 +495,27 @@
             
             window.addEventListener('scroll', onScroll, { passive: true });
             onScroll(); // 初始化时执行一次
+            
+            // 添加点击目录项时的滚动处理
+            if (desktopToc) {
+                desktopToc.addEventListener('click', (e) => {
+                    const link = e.target.closest('a');
+                    if (link && link.hasAttribute('data-heading-id')) {
+                        const headingId = link.getAttribute('data-heading-id');
+                        const heading = document.getElementById(headingId);
+                        if (heading) {
+                            const navHeight = document.querySelector('nav').offsetHeight;
+                            const headingTop = heading.getBoundingClientRect().top + window.pageYOffset;
+                            const targetPosition = headingTop - navHeight - 24;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            }
         }
     });
 </script>
@@ -599,7 +631,6 @@
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>20:00</span>
         </div>
     </div>
 
