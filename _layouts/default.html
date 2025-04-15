@@ -324,12 +324,18 @@
                     
                     // 创建目录项
                     const item = document.createElement('li');
+                    // 根据标题级别设置不同的样式
+                    if (level > 0) {
+                        item.style.marginLeft = `${(level-1) * 8}px`;
+                    }
                     
                     // 创建链接
                     const link = document.createElement('a');
                     link.textContent = heading.textContent;
                     link.href = '#' + (heading.id || `heading-${index}`);
-                    link.className = 'text-gray-700 hover:text-gray-900 hover:underline block py-1 transition-colors duration-200 break-words';
+                    // 根据标题级别设置不同的样式
+                    const levelClass = level === 0 ? 'font-medium' : level === 1 ? '' : 'text-sm';
+                    link.className = `text-gray-700 hover:text-gray-900 hover:underline block py-1 transition-colors duration-200 break-words ${levelClass}`;
                     link.setAttribute('data-heading-id', heading.id || `heading-${index}`);
                     
                     // 如果标题没有ID，添加一个
@@ -341,8 +347,8 @@
                     if (level > currentLevel) {
                         // 创建新的子列表
                         const newList = document.createElement('ul');
-                        // 移除所有边框，只保留基本样式
-                        newList.className = 'pl-4 space-y-1 mt-1';
+                        // 设置缩进和样式，增强层级视觉效果
+                        newList.className = 'pl-4 space-y-1 mt-1 border-l border-gray-200';
                         
                         // 确保lists[currentLevel]存在且有lastChild
                         if (lists[currentLevel] && lists[currentLevel].lastChild) {
