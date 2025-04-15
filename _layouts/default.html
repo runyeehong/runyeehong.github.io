@@ -410,91 +410,69 @@
 
         // 更新活动标题状态
         function updateActiveHeading(headingId) {
-            // 移除所有链接的选中状态
-            document.querySelectorAll('.toc-content a').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // 只为当前标题添加选中状态并确保其可见
-            const activeLink = document.querySelector(`.toc-content a[data-heading-id="${headingId}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-                ensureActiveLinkVisible(activeLink);
-            }
-        }
-
-        // 新增函数：确保当前活动的目录项在视图中可见
-        function ensureActiveLinkVisible(activeLink) {
-            if (window.innerWidth >= 768) { // 仅在桌面端处理
-                const tocContainer = document.querySelector('#desktop-toc .sticky');
-                if (tocContainer) {
-                    const containerRect = tocContainer.getBoundingClientRect();
-                    const linkRect = activeLink.getBoundingClientRect();
-                    
-                    // 计算相对位置
-                    const linkTop = linkRect.top - containerRect.top;
-                    const linkBottom = linkRect.bottom - containerRect.top;
-                    
-                    // 如果目录项不在可视区域内，进行滚动
-                    if (linkTop < 0 || linkBottom > containerRect.height) {
-                        // 计算目标位置，使活动项居中显示
-                        const targetScroll = tocContainer.scrollTop + linkTop - (containerRect.height - linkRect.height) / 2;
-                        
-                        tocContainer.scrollTo({
-                            top: targetScroll,
-                            behavior: 'smooth'
-                        });
-                    }
+            const tocLinks = document.querySelectorAll('.toc-content a');
+            tocLinks.forEach(link => {
+                const linkHeadingId = link.getAttribute('data-heading-id');
+                if (linkHeadingId === headingId) {
+                    link.classList.add('text-gray-900', 'font-medium');
+                } else {
+                    link.classList.remove('text-gray-900', 'font-medium');
                 }
-            }
+            });
         }
 
         // 修改滚动监听实现
         function setupScrollSpy(headingMap) {
             let ticking = false;
-            let lastScrollTop = window.pageYOffset;
+            const desktopToc = document.querySelector('.desktop-toc-content');
             
             function onScroll() {
                 if (!ticking) {
                     window.requestAnimationFrame(() => {
                         const navHeight = document.querySelector('nav').offsetHeight;
-                        const scrollPos = window.scrollY + navHeight + 24;
-                        const scrollingDown = window.pageYOffset > lastScrollTop;
-                        lastScrollTop = window.pageYOffset;
+                        const scrollPos = window.scrollY + navHeight + 24; // 导航栏高度 + 额外偏移
                         
                         // 找到当前可见的标题
                         let currentHeading = null;
-                        let minDistance = Infinity;
+                        let lastVisibleHeading = null;
                         
-                        // 根据滚动方向调整遍历顺序
-                        const headings = Array.from(headingMap.entries());
-                        if (!scrollingDown) {
-                            headings.reverse();
-                        }
-                        
-                        for (const [id, heading] of headings) {
+                        for (const [id, heading] of headingMap) {
                             const rect = heading.getBoundingClientRect();
                             const absoluteTop = window.pageYOffset + rect.top;
                             
-                            // 调整距离计算方式
-                            let distance;
-                            if (scrollingDown) {
-                                distance = absoluteTop - scrollPos;
-                                if (distance < 0 && distance > -window.innerHeight) {
+                            if (absoluteTop <= scrollPos) {
+                                lastVisibleHeading = id;
+                                if (rect.top <= navHeight + 24) {
                                     currentHeading = id;
-                                    break;
-                                }
-                            } else {
-                                distance = scrollPos - absoluteTop;
-                                if (distance < 0 && distance > -window.innerHeight) {
-                                    currentHeading = id;
-                                    break;
                                 }
                             }
                         }
                         
+                        // 如果没有找到当前可见的标题，使用最后一个可见的标题
+                        if (!currentHeading && lastVisibleHeading) {
+                            currentHeading = lastVisibleHeading;
+                        }
+                        
                         if (currentHeading) {
                             updateActiveHeading(currentHeading);
+                            
+                            // 自动滚动目录到当前活动项
+                            if (desktopToc) {
+                                const activeLink = desktopToc.querySelector(`a[data-heading-id="${currentHeading}"]`);
+                                if (activeLink) {
+                                    const linkRect = activeLink.getBoundingClientRect();
+                                    const tocRect = desktopToc.getBoundingClientRect();
+                                    const tocScrollTop = desktopToc.scrollTop;
+                                    
+                                    // 如果链接在可视区域外，滚动到中间位置
+                                    if (linkRect.top < tocRect.top || linkRect.bottom > tocRect.bottom) {
+                                        desktopToc.scrollTo({
+                                            top: tocScrollTop + (linkRect.top - tocRect.top) - (tocRect.height / 2) + (linkRect.height / 2),
+                                            behavior: 'smooth'
+                                        });
+                                    }
+                                }
+                            }
                         }
                         
                         ticking = false;
@@ -504,8 +482,7 @@
             }
             
             window.addEventListener('scroll', onScroll, { passive: true });
-            // 初始化时执行一次，确保页面加载时就能正确定位
-            setTimeout(onScroll, 100);
+            onScroll(); // 初始化时执行一次
         }
     });
 </script>
@@ -621,7 +598,7 @@
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>v555555</span>
+            <span>666667777777</span>
         </div>
     </div>
 
