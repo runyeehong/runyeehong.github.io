@@ -387,8 +387,8 @@
                 const navHeight = document.querySelector('nav').offsetHeight;
                 const extraPadding = 24;
                 
-                // 移动端时关闭目录
-                if (window.innerWidth < 768) {
+                // 只在桌面端时关闭目录
+                if (window.innerWidth >= 768) {
                     if (typeof closeTocMenu === 'function') {
                         closeTocMenu();
                     }
@@ -403,7 +403,7 @@
                     behavior: 'smooth'
                 });
                 
-                // 直接更新当前点击的标题，不处理中间路径
+                // 更新活动标题
                 updateActiveHeading(targetId);
             }
         }
@@ -588,11 +588,11 @@
     }
 </style>
 
-    <!-- 版本标记 - 每次更新代码时请修改这里的版本号 --记录下目录跟随但是有bug版试试，这个版要再推送试试>
+    <!-- 版本标记 - 每次更新代码时请修改这里的版本号 ，合并优化版本尝试-->
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>v2025.04.15.18:00</span>
+            <span>666</span>
         </div>
     </div>
 
