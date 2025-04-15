@@ -387,8 +387,8 @@
                 const navHeight = document.querySelector('nav').offsetHeight;
                 const extraPadding = 24;
                 
-                // 移动端时关闭目录
-                if (window.innerWidth < 768) {
+                // 只在桌面端时关闭目录
+                if (window.innerWidth >= 768) {
                     if (typeof closeTocMenu === 'function') {
                         closeTocMenu();
                     }
@@ -403,50 +403,22 @@
                     behavior: 'smooth'
                 });
                 
-                // 直接更新当前点击的标题，不处理中间路径
+                // 更新活动标题
                 updateActiveHeading(targetId);
             }
         }
 
         // 更新活动标题状态
         function updateActiveHeading(headingId) {
-            // 移除所有链接的选中状态
-            document.querySelectorAll('.toc-content a').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // 只为当前点击的标题添加选中状态
-            const activeLink = document.querySelector(`.toc-content a[data-heading-id="${headingId}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-                
-                // 确保桌面端目录项完全可见
-                if (window.innerWidth >= 768) {
-                    const tocContainer = document.querySelector('#desktop-toc .sticky');
-                    if (tocContainer) {
-                        const containerRect = tocContainer.getBoundingClientRect();
-                        const linkRect = activeLink.getBoundingClientRect();
-                        
-                        // 计算目标滚动位置
-                        let targetScroll = tocContainer.scrollTop;
-                        
-                        // 如果目录项在可视区域上方
-                        if (linkRect.top < containerRect.top) {
-                            targetScroll += (linkRect.top - containerRect.top) - 16;
-                        }
-                        // 如果目录项在可视区域下方
-                        else if (linkRect.bottom > containerRect.bottom) {
-                            targetScroll += (linkRect.bottom - containerRect.bottom) + 16;
-                        }
-                        
-                        // 平滑滚动到目标位置
-                        tocContainer.scrollTo({
-                            top: targetScroll,
-                            behavior: 'smooth'
-                        });
-                    }
+            const tocLinks = document.querySelectorAll('.toc-content a');
+            tocLinks.forEach(link => {
+                const linkHeadingId = link.getAttribute('data-heading-id');
+                if (linkHeadingId === headingId) {
+                    link.classList.add('text-gray-900', 'font-medium');
+                } else {
+                    link.classList.remove('text-gray-900', 'font-medium');
                 }
-            }
+            });
         }
 
         // 修改滚动监听实现
@@ -461,17 +433,14 @@
                         
                         // 找到当前可见的标题
                         let currentHeading = null;
-                        let minDistance = Infinity;
-                        
                         for (const [id, heading] of headingMap) {
                             const rect = heading.getBoundingClientRect();
                             const absoluteTop = window.pageYOffset + rect.top;
-                            const distance = Math.abs(absoluteTop - scrollPos);
                             
-                            // 选择距离视口顶部最近的标题
-                            if (distance < minDistance) {
-                                minDistance = distance;
+                            if (absoluteTop <= scrollPos) {
                                 currentHeading = id;
+                            } else {
+                                break;
                             }
                         }
                         
@@ -504,11 +473,10 @@
     }
     
     .toc-content a {
-        text-decoration: none !important;
-        color: #9CA3AF;
         display: block;
-        padding: 0.5rem;
-        margin: 0.25rem 0;
+        padding: 0.25rem 0.5rem;
+        color: #4B5563;
+        text-decoration: none;
         border-radius: 0.25rem;
         transition: all 0.2s;
     }
@@ -518,27 +486,17 @@
         color: #9CA3AF;
     }
     
-    /* 桌面端悬停状态 */
-    @media (min-width: 768px) {
-        .desktop-toc-content a:hover {
-            color: #111827;
-            background: none;
-        }
-    }
-    
-    /* 桌面端选中状态 */
-    .desktop-toc-content a.active {
-        color: #111827 !important;
+    /* 桌面端悬停状态 - 仅改变文字颜色和加粗 */
+    .desktop-toc-content a:hover {
+        color: #4B5563;
         font-weight: 600;
-        background-color: #F3F4F6;
     }
     
     /* 移动端目录悬停状态 */
-    @media (max-width: 767px) {
-        #mobile-toc .toc-content a:hover {
-            background: none;
-            color: #9CA3AF;
-        }
+    #mobile-toc .toc-content a:hover {
+        color: #111827;
+        font-weight: 600;
+        background-color: rgba(17, 24, 39, 0.05);
     }
     
     /* 桌面端选中状态 - 保留背景色 */
@@ -607,35 +565,13 @@
     .prose h6 {
         scroll-margin-top: calc(64px + 24px); /* 导航栏高度 + 额外边距 */
     }
-    
-    /* 确保目录容器有足够的高度和正确的滚动行为 */
-    #desktop-toc .sticky {
-        max-height: calc(100vh - 150px);
-        overflow-y: auto;
-        padding-right: 1rem;
-        scrollbar-width: thin;
-        scrollbar-color: #E5E7EB transparent;
-    }
-    
-    #desktop-toc .sticky::-webkit-scrollbar {
-        width: 4px;
-    }
-    
-    #desktop-toc .sticky::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    
-    #desktop-toc .sticky::-webkit-scrollbar-thumb {
-        background-color: #E5E7EB;
-        border-radius: 2px;
-    }
 </style>
 
     <!-- 版本标记 - 每次更新代码时请修改这里的版本号 -->
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>v2025.04.15.18:33</span>
+            <span>v2025.04.15.19:00</span>
         </div>
     </div>
 
