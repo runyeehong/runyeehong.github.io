@@ -471,16 +471,20 @@
                             if (desktopToc) {
                                 const activeLink = desktopToc.querySelector(`a[data-heading-id="${currentHeading}"]`);
                                 if (activeLink) {
+                                    // 获取各元素的位置信息
                                     const linkRect = activeLink.getBoundingClientRect();
                                     const tocRect = desktopToc.getBoundingClientRect();
                                     
-                                    // 检查活动项是否在目录可视区域内
-                                    const isLinkVisible = linkRect.top >= tocRect.top && 
-                                                        linkRect.bottom <= tocRect.bottom;
+                                    // 检查活动项是否完全在目录可视区域内
+                                    const isFullyVisible = (
+                                        linkRect.top >= tocRect.top && 
+                                        linkRect.bottom <= tocRect.bottom
+                                    );
                                     
-                                    // 如果活动项不在可视区域内，则滚动到该位置
-                                    if (!isLinkVisible) {
+                                    // 如果活动项不完全在可视区域内，则总是滚动使其居中显示
+                                    if (!isFullyVisible) {
                                         const tocScrollTop = desktopToc.scrollTop;
+                                        // 计算目标滚动位置，使活动项居中
                                         const targetScrollTop = tocScrollTop + (linkRect.top - tocRect.top) - (tocRect.height / 2) + (linkRect.height / 2);
                                         
                                         // 使用平滑滚动
