@@ -426,18 +426,12 @@
             let ticking = false;
             const desktopToc = document.querySelector('.desktop-toc-content');
             let lastScrollPosition = 0;
-            let currentPage = 0;
-            const itemsPerPage = 5; // 每页显示的目录项数量
-            
-            // 计算目录项总数和总页数
-            const totalItems = Array.from(headingMap.keys()).length;
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
             
             function onScroll() {
                 if (!ticking) {
                     window.requestAnimationFrame(() => {
                         const navHeight = document.querySelector('nav').offsetHeight;
-                        const scrollPos = window.scrollY + navHeight + 24;
+                        const scrollPos = window.scrollY + navHeight + 24; // 导航栏高度 + 额外偏移
                         const isScrollingUp = window.scrollY < lastScrollPosition;
                         lastScrollPosition = window.scrollY;
                         
@@ -445,17 +439,8 @@
                         let currentHeading = null;
                         let lastVisibleHeading = null;
                         let firstVisibleHeading = null;
-                        let currentHeadingIndex = -1;
                         
-                        // 获取所有标题并按DOM顺序排序
-                        const sortedHeadings = Array.from(headingMap.entries())
-                            .sort((a, b) => {
-                                const position = a[1].compareDocumentPosition(b[1]);
-                                return position & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
-                            });
-                        
-                        for (let i = 0; i < sortedHeadings.length; i++) {
-                            const [id, heading] = sortedHeadings[i];
+                        for (const [id, heading] of headingMap) {
                             const rect = heading.getBoundingClientRect();
                             const absoluteTop = window.pageYOffset + rect.top;
                             
@@ -466,7 +451,6 @@
                                 }
                                 if (rect.top <= navHeight + 24) {
                                     currentHeading = id;
-                                    currentHeadingIndex = i;
                                 }
                             }
                         }
@@ -475,30 +459,28 @@
                         if (!currentHeading) {
                             if (isScrollingUp && firstVisibleHeading) {
                                 currentHeading = firstVisibleHeading;
-                                currentHeadingIndex = sortedHeadings.findIndex(([id]) => id === firstVisibleHeading);
                             } else if (lastVisibleHeading) {
                                 currentHeading = lastVisibleHeading;
-                                currentHeadingIndex = sortedHeadings.findIndex(([id]) => id === lastVisibleHeading);
                             }
                         }
                         
                         if (currentHeading) {
                             updateActiveHeading(currentHeading);
                             
-                            // 计算当前标题应该在哪一页
-                            const newPage = Math.floor(currentHeadingIndex / itemsPerPage);
-                            
-                            // 如果页面发生变化，滚动到新页面
-                            if (newPage !== currentPage) {
-                                currentPage = newPage;
-                                if (desktopToc) {
-                                    const activeLink = desktopToc.querySelector(`a[data-heading-id="${currentHeading}"]`);
-                                    if (activeLink) {
-                                        const linkRect = activeLink.getBoundingClientRect();
-                                        const tocRect = desktopToc.getBoundingClientRect();
+                            // 自动滚动目录到当前活动项
+                            if (desktopToc) {
+                                const activeLink = desktopToc.querySelector(`a[data-heading-id="${currentHeading}"]`);
+                                if (activeLink) {
+                                    const linkRect = activeLink.getBoundingClientRect();
+                                    const tocRect = desktopToc.getBoundingClientRect();
+                                    
+                                    // 检查活动项是否在目录可视区域内
+                                    const isLinkVisible = linkRect.top >= tocRect.top && 
+                                                        linkRect.bottom <= tocRect.bottom;
+                                    
+                                    // 如果活动项不在可视区域内，则滚动到该位置
+                                    if (!isLinkVisible) {
                                         const tocScrollTop = desktopToc.scrollTop;
-                                        
-                                        // 计算目标滚动位置，使活动项在目录中间位置
                                         const targetScrollTop = tocScrollTop + (linkRect.top - tocRect.top) - (tocRect.height / 2) + (linkRect.height / 2);
                                         
                                         // 使用平滑滚动
@@ -655,7 +637,7 @@
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>222:00</span>
+            <span>00</span>
         </div>
     </div>
 
