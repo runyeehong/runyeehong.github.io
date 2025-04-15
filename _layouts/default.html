@@ -412,6 +412,78 @@
                 }
             });
         }
+
+        // 生成文章目录
+        function generateTableOfContents() {
+            // 获取所有标题并转换为数组以便排序
+            const headingsArray = Array.from(document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6'));
+            
+            if (headingsArray.length === 0) return;
+            
+            // 根据DOM位置排序
+            const sortedHeadings = headingsArray.sort((a, b) => {
+                const position = a.compareDocumentPosition(b);
+                return position & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+            });
+            
+            const tocContents = document.querySelectorAll('.toc-content');
+            const toc = document.createElement('ul');
+            toc.className = 'space-y-2 text-sm';
+            
+            sortedHeadings.forEach((heading, index) => {
+                // 为每个标题生成唯一ID
+                if (!heading.id) {
+                    heading.id = `heading-${index}`;
+                }
+                
+                const level = parseInt(heading.tagName.substring(1));
+                const item = document.createElement('li');
+                const link = document.createElement('a');
+                
+                // 设置链接文本和属性
+                link.textContent = heading.textContent;
+                link.href = `#${heading.id}`;
+                link.setAttribute('data-level', level);
+                link.className = `block py-1 transition-colors duration-200 text-gray-600 hover:text-gray-900 ${level === 1 ? 'font-medium' : ''}`;
+                
+                // 设置缩进
+                item.style.paddingLeft = `${(level - 1) * 12}px`;
+                
+                item.appendChild(link);
+                toc.appendChild(item);
+                
+                // 点击处理
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        const navHeight = document.querySelector('nav').offsetHeight;
+                        const offset = 60; // 额外偏移量
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - offset;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        updateActiveHeading(targetId);
+                    }
+                });
+            });
+            
+            // 更新目录内容
+            tocContents.forEach(tocContent => {
+                if (tocContent) {
+                    tocContent.innerHTML = '';
+                    tocContent.appendChild(toc.cloneNode(true));
+                }
+            });
+            
+            // 设置滚动监听
+            setupScrollSpy();
+        }
     });
 </script>
 <style>
