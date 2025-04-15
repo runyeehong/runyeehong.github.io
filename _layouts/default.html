@@ -426,61 +426,76 @@
             const desktopToc = document.querySelector('.desktop-toc-content');
             let ticking = false;
             
-            function updateTocScroll(activeLink) {
-                if (!desktopToc || !activeLink) return;
-                
-                const tocRect = desktopToc.getBoundingClientRect();
-                const linkRect = activeLink.getBoundingClientRect();
-                
-                // 检查目录项是否在可视区域内
-                if (linkRect.top < tocRect.top || linkRect.bottom > tocRect.bottom) {
-                    // 计算滚动位置，使目录项居中显示
-                    const targetScrollTop = activeLink.offsetTop - (tocRect.height / 2) + (linkRect.height / 2);
-                    desktopToc.scrollTo({
-                        top: targetScrollTop,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-
-            function findCurrentHeading() {
+            function getActiveHeading() {
                 const navHeight = document.querySelector('nav').offsetHeight;
-                let currentHeading = null;
+                let closestHeading = null;
                 let minDistance = Infinity;
-
-                // 遍历所有标题，找到最接近视口顶部的标题
-                headingMap.forEach((heading, id) => {
+                
+                headings.forEach(heading => {
                     const rect = heading.getBoundingClientRect();
-                    const distance = Math.abs(rect.top - navHeight);
+                    // 计算标题顶部到导航栏底部的距离
+                    const distance = Math.abs(rect.top - navHeight - 24);
                     
-                    if (distance < minDistance) {
+                    // 如果标题在视口上方且距离更近
+                    if (rect.top <= navHeight + 24 && distance < minDistance) {
                         minDistance = distance;
-                        currentHeading = id;
+                        closestHeading = heading;
                     }
                 });
-
-                return currentHeading;
+                
+                // 如果没有找到在视口上方的标题，找最接近的标题
+                if (!closestHeading) {
+                    headings.forEach(heading => {
+                        const rect = heading.getBoundingClientRect();
+                        const distance = Math.abs(rect.top - navHeight - 24);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestHeading = heading;
+                        }
+                    });
+                }
+                
+                return closestHeading;
             }
-
+            
+            function updateToc(heading) {
+                if (!heading || !desktopToc) return;
+                
+                // 更新活动状态
+                const allLinks = desktopToc.querySelectorAll('a');
+                allLinks.forEach(link => link.classList.remove('active'));
+                
+                const activeLink = desktopToc.querySelector(`a[data-heading-id="${heading.id}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                    
+                    // 检查活动链接是否在目录可视区域内
+                    const tocRect = desktopToc.getBoundingClientRect();
+                    const linkRect = activeLink.getBoundingClientRect();
+                    
+                    const isVisible = (
+                        linkRect.top >= tocRect.top &&
+                        linkRect.bottom <= tocRect.bottom
+                    );
+                    
+                    // 如果不在可视区域内，滚动到该位置
+                    if (!isVisible) {
+                        const scrollTop = activeLink.offsetTop - (tocRect.height / 2) + (linkRect.height / 2);
+                        desktopToc.scrollTo({
+                            top: scrollTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }
+            
             function onScroll() {
                 if (!ticking) {
                     requestAnimationFrame(() => {
-                        const currentHeading = findCurrentHeading();
-                        
-                        if (currentHeading) {
-                            // 移除所有活动状态
-                            document.querySelectorAll('.toc-link').forEach(link => {
-                                link.classList.remove('active');
-                            });
-                            
-                            // 设置当前活动项
-                            const activeLink = document.querySelector(`a[data-heading-id="${currentHeading}"]`);
-                            if (activeLink) {
-                                activeLink.classList.add('active');
-                                updateTocScroll(activeLink);
-                            }
+                        const activeHeading = getActiveHeading();
+                        if (activeHeading) {
+                            updateToc(activeHeading);
                         }
-                        
                         ticking = false;
                     });
                     ticking = true;
@@ -493,7 +508,7 @@
             // 初始化时执行一次
             onScroll();
             
-            // 添加点击目录项时的滚动处理
+            // 处理目录点击事件
             if (desktopToc) {
                 desktopToc.addEventListener('click', (e) => {
                     const link = e.target.closest('a');
@@ -629,7 +644,7 @@
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>22:48</span>
+            <span>23:48</span>
         </div>
     </div>
 
