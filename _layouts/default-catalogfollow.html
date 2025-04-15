@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} - {% endif %}pmrunyee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF',
+                        dark: '#1F2937',
+                        light: '#F3F4F6'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                    typography: (theme) => ({
+                        DEFAULT: {
+                            css: {
+                                color: theme('colors.gray.800'),
+                                h1: {
+                                    color: theme('colors.gray.900'),
+                                    fontWeight: '700',
+                                },
+                                h2: {
+                                    color: theme('colors.gray.900'),
+                                    fontWeight: '600',
+                                },
+                                h3: {
+                                    color: theme('colors.gray.900'),
+                                    fontWeight: '600',
+                                },
+                                a: {
+                                    color: theme('colors.blue.600'),
+                                    '&:hover': {
+                                        color: theme('colors.blue.800'),
+                                    },
+                                },
+                                code: {
+                                    color: theme('colors.gray.800'),
+                                    backgroundColor: theme('colors.gray.100'),
+                                    padding: '0.2em 0.4em',
+                                    borderRadius: '0.25rem',
+                                },
+                                pre: {
+                                    backgroundColor: theme('colors.gray.800'),
+                                    color: theme('colors.gray.100'),
+                                }
+                            },
+                        },
+                    }),
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer components {
+            .tag {
+                @apply inline-block px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap;
+            }
+            .tag-saas { @apply tag bg-indigo-100 text-indigo-800; }
+            .tag-cloud { @apply tag bg-blue-100 text-blue-800; }
+            .tag-enterprise { @apply tag bg-red-100 text-red-800; }
+            .tag-collab { @apply tag bg-green-100 text-green-800; }
+            .tag-crm { @apply tag bg-orange-100 text-orange-800; }
+            .tag-ai { @apply tag bg-purple-100 text-purple-800; }
+            .tag-method { @apply tag bg-cyan-100 text-cyan-800; }
+            
+            /* 添加 prose 样式 */
+            .prose {
+                @apply max-w-none text-gray-800;
+            }
+            .prose h1 {
+                @apply text-3xl font-bold text-gray-900 mt-8 mb-4;
+            }
+            .prose h2 {
+                @apply text-2xl font-bold text-gray-900 mt-6 mb-3;
+            }
+            .prose h3 {
+                @apply text-xl font-semibold text-gray-900 mt-5 mb-2;
+            }
+            .prose p {
+                @apply my-4;
+            }
+            .prose ul, .prose ol {
+                @apply my-4 pl-6;
+            }
+            .prose li {
+                @apply mb-1;
+            }
+            .prose a {
+                @apply text-blue-600 hover:text-blue-800 underline;
+            }
+            .prose img {
+                @apply max-w-full rounded-lg my-6;
+            }
+            .prose blockquote {
+                @apply border-l-4 border-gray-300 pl-4 italic my-6;
+            }
+            .prose code {
+                @apply bg-gray-100 px-1 py-0.5 rounded text-sm;
+            }
+            .prose pre {
+                @apply bg-gray-800 text-white p-4 rounded-lg overflow-auto my-6;
+            }
+            .prose pre code {
+                @apply bg-transparent text-white p-0;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 text-gray-800">
+    <nav class="fixed w-full bg-white shadow-sm z-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-xl font-bold text-dark">pmrunyee</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">主页</a>
+                    <a href="/#projects" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">作品</a>
+                    <a href="/#blogs" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">博客</a>
+                </div>
+                <!-- 移动端菜单按钮 -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-500 hover:text-primary">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 移动端菜单内容 -->
+            <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg rounded-b-lg mt-1">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100">主页</a>
+                    <a href="/#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100">作品</a>
+                    <a href="/#blogs" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100">博客</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 在 <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto"> 之后添加 -->
+    <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <!-- 文章标题和目录按钮 -->
+        {% if page.title %}
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">{{ page.title }}</h1>
+            <!-- 旧的目录按钮已移除 -->
+        </div>
+        {% endif %}
+        
+        <!-- 文章内容和目录 -->
+        <!-- 修改文章内容和目录的占比 -->
+        <div class="flex flex-col md:flex-row gap-8">
+        <!-- 文章内容 -->
+        <div class="flex-1">
+            <div class="prose max-w-none">
+                {{ content }}
+            </div>
+        </div>
+        
+        <!-- 移动端目录按钮 (固定在右下角) -->
+        {% if page.toc %}
+        <button id="mobile-toc-button" class="md:hidden fixed bottom-12 right-6 bg-gray-800 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg z-50 hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
+        </button>
+        {% endif %}
+        
+        <!-- 移动端目录 (从底部弹出) -->
+        <!-- 移动端目录 (从底部弹出) -->
+        {% if page.toc %}
+        <div id="mobile-toc" class="md:hidden fixed inset-0 z-50 hidden">
+        <div class="bg-white rounded-t-lg shadow-xl absolute bottom-0 left-0 right-0 max-h-[50vh] overflow-y-auto transform transition-transform duration-300 translate-y-full" id="mobile-toc-container">
+        <div class="flex justify-between items-center p-4 sticky top-0 bg-white">
+        <h3 class="font-medium text-base">文章目录</h3>
+        <button id="close-toc" class="text-gray-500">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        </div>
+        <div class="border-b border-gray-200 mx-4"></div>
+        <div class="p-4 toc-content"></div>
+        </div>
+        </div>
+        {% endif %}
+        
+        <!-- 桌面端目录 (固定在右侧) -->
+        {% if page.toc %}
+        <div id="desktop-toc" class="hidden md:block md:w-1/5 lg:w-1/5 flex-shrink-0">
+        <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
+          <div class="flex-1">
+            <div class="md:sticky md:top-0 md:z-10 md:pb-3 bg-gray-50">
+            <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
+              <div class="border-b border-gray-200"></div>
+            </div>
+            <div class="flex items-start relative mt-3">
+              <!-- 垂直分割线 -->
+              <div class="absolute left-0 top-0 bottom-0 border-l-2 border-gray-200"></div>
+              <div class="flex-1 toc-content desktop-toc-content pl-4"></div>
+            </div>
+          </div>
+        </div>
+        </div>
+        {% endif %}
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2">pmrunyee</h3>
+                    <p class="text-gray-300">Wechat/Email：yysafari@foxmail.com</p>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+                <p>© 2025 pmrunyee Portfolio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+<!-- 在页脚之后，body结束标签之前添加 -->
+<script>
+    // 移动端菜单交互
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // 点击菜单项后自动关闭菜单
+            const mobileMenuItems = mobileMenu.querySelectorAll('a');
+            mobileMenuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        }
+        
+        // 文章目录功能
+        const mobileTocButton = document.getElementById('mobile-toc-button');
+        const mobileToc = document.getElementById('mobile-toc');
+        const mobileTocContainer = document.getElementById('mobile-toc-container');
+        const closeToc = document.getElementById('close-toc');
+        const desktopToc = document.getElementById('desktop-toc');
+        
+        // 检查是否有目录内容
+        function hasTocContent() {
+            const headings = document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4');
+            return headings.length > 0;
+        }
+        
+        // 如果有目录内容，显示目录相关元素
+        if (hasTocContent()) {
+            // 显示移动端目录按钮
+            if (mobileTocButton) {
+                mobileTocButton.classList.remove('hidden');
+            }
+            
+            // 生成目录内容
+            generateTableOfContents();
+            
+            if (mobileTocButton && mobileToc) {
+                // 打开目录
+                mobileTocButton.addEventListener('click', function() {
+                    mobileToc.classList.remove('hidden');
+                    // 使用动画效果显示目录
+                    setTimeout(() => {
+                        mobileTocContainer.classList.remove('translate-y-full');
+                    }, 10);
+                    document.body.style.overflow = 'hidden'; // 防止背景滚动
+                });
+                
+                // 关闭目录
+                closeToc.addEventListener('click', function() {
+                    closeTocMenu();
+                });
+                
+                // 点击背景关闭目录
+                mobileToc.addEventListener('click', function(e) {
+                    if (e.target === mobileToc) {
+                        closeTocMenu();
+                    }
+                });
+                
+                function closeTocMenu() {
+                    mobileTocContainer.classList.add('translate-y-full');
+                    setTimeout(() => {
+                        mobileToc.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }, 300);
+                }
+            }
+        } else {
+            // 如果没有目录内容，隐藏目录相关元素
+            if (desktopToc) {
+                desktopToc.classList.add('hidden');
+                desktopToc.classList.remove('md:block');
+            }
+            
+            if (mobileTocButton) {
+                mobileTocButton.classList.add('hidden');
+            }
+        }
+        
+        // 修改生成目录函数中的点击事件处理
+        function generateTableOfContents() {
+            // 获取所有标题并转换为数组以便排序
+            const headingsArray = Array.from(document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6'));
+            
+            if (headingsArray.length === 0) return;
+            
+            // 根据DOM位置排序
+            const sortedHeadings = headingsArray.sort((a, b) => {
+                const position = a.compareDocumentPosition(b);
+                return position & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+            });
+            
+            const tocContents = document.querySelectorAll('.toc-content');
+            const toc = document.createElement('ul');
+            toc.className = 'space-y-2 text-sm';
+            
+            // 创建标题ID到DOM元素的映射
+            const headingMap = new Map();
+            
+            sortedHeadings.forEach((heading, index) => {
+                // 为每个标题生成唯一ID
+                if (!heading.id) {
+                    heading.id = `heading-${index}`;
+                }
+                headingMap.set(heading.id, heading);
+                
+                const level = parseInt(heading.tagName.substring(1));
+                const item = document.createElement('li');
+                const link = document.createElement('a');
+                
+                // 设置链接文本和属性
+                link.textContent = heading.textContent;
+                link.href = `#${heading.id}`;
+                link.setAttribute('data-heading-id', heading.id);
+                link.setAttribute('data-level', level);
+                link.className = `block py-1 transition-colors duration-200 text-gray-600 hover:text-gray-900`;
+                
+                // 设置缩进
+                item.style.paddingLeft = `${(level - 1) * 12}px`;
+                
+                item.appendChild(link);
+                toc.appendChild(item);
+            });
+            
+            // 更新目录内容
+            tocContents.forEach(tocContent => {
+                if (tocContent) {
+                    tocContent.innerHTML = '';
+                    tocContent.appendChild(toc.cloneNode(true));
+                    
+                    // 为每个链接添加点击事件
+                    tocContent.querySelectorAll('a').forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const headingId = link.getAttribute('data-heading-id');
+                            handleTocClick(link, headingId);
+                        });
+                    });
+                }
+            });
+            
+            // 设置滚动监听
+            setupScrollSpy(headingMap);
+        }
+
+        // 修改 handleTocClick 函数
+        function handleTocClick(link, targetId) {
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                const navHeight = document.querySelector('nav').offsetHeight;
+                const extraPadding = 24;
+                
+                // 移动端时关闭目录
+                if (window.innerWidth < 768) {
+                    if (typeof closeTocMenu === 'function') {
+                        closeTocMenu();
+                    }
+                }
+                
+                // 计算目标位置，考虑导航栏高度和额外边距
+                const targetPosition = window.pageYOffset + targetElement.getBoundingClientRect().top - navHeight - extraPadding;
+                
+                // 平滑滚动到目标位置
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // 直接更新当前点击的标题，不处理中间路径
+                updateActiveHeading(targetId);
+            }
+        }
+
+        // 更新活动标题状态
+        function updateActiveHeading(headingId) {
+            const tocLinks = document.querySelectorAll('.toc-content a');
+            tocLinks.forEach(link => {
+                const linkHeadingId = link.getAttribute('data-heading-id');
+                if (linkHeadingId === headingId) {
+                    link.classList.add('text-gray-900', 'font-medium');
+                } else {
+                    link.classList.remove('text-gray-900', 'font-medium');
+                }
+            });
+            
+            // 确保当前活动的目录项在视图中可见
+            const activeLink = document.querySelector(`.desktop-toc-content a[data-heading-id="${headingId}"]`);
+            if (activeLink) {
+                const tocContainer = document.querySelector('#desktop-toc .sticky');
+                if (tocContainer) {
+                    const containerRect = tocContainer.getBoundingClientRect();
+                    const linkRect = activeLink.getBoundingClientRect();
+                    
+                    // 如果目录项在可视区域外，滚动到可见位置
+                    if (linkRect.top < containerRect.top || linkRect.bottom > containerRect.bottom) {
+                        activeLink.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest'
+                        });
+                    }
+                }
+            }
+        }
+
+        // 修改滚动监听实现
+        function setupScrollSpy(headingMap) {
+            let ticking = false;
+            
+            function onScroll() {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const navHeight = document.querySelector('nav').offsetHeight;
+                        const scrollPos = window.scrollY + navHeight + 24; // 导航栏高度 + 额外偏移
+                        
+                        // 找到当前可见的标题
+                        let currentHeading = null;
+                        let minDistance = Infinity;
+                        
+                        for (const [id, heading] of headingMap) {
+                            const rect = heading.getBoundingClientRect();
+                            const absoluteTop = window.pageYOffset + rect.top;
+                            const distance = Math.abs(absoluteTop - scrollPos);
+                            
+                            // 选择距离视口顶部最近的标题
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                currentHeading = id;
+                            }
+                        }
+                        
+                        if (currentHeading) {
+                            updateActiveHeading(currentHeading);
+                        }
+                        
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+            
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll(); // 初始化时执行一次
+        }
+    });
+</script>
+<style>
+    /* 目录样式 */
+    .toc-content ul {
+        list-style: none;
+        padding-left: 0;
+        border: none;
+    }
+    
+    .toc-content li {
+        margin-bottom: 0.25rem;
+        border: none;
+    }
+    
+    .toc-content a {
+        display: block;
+        padding: 0.25rem 0.5rem;
+        color: #4B5563;
+        text-decoration: none;
+        border-radius: 0.25rem;
+        transition: all 0.2s;
+    }
+    
+    /* 桌面端目录颜色调浅 */
+    .desktop-toc-content a {
+        color: #9CA3AF;
+    }
+    
+    /* 桌面端悬停状态 - 仅改变文字颜色和加粗 */
+    .desktop-toc-content a:hover {
+        color: #4B5563;
+        font-weight: 600;
+    }
+    
+    /* 移动端目录悬停状态 */
+    #mobile-toc .toc-content a:hover {
+        color: #111827;
+        font-weight: 600;
+        background-color: rgba(17, 24, 39, 0.05);
+    }
+    
+    /* 桌面端选中状态 - 保留背景色 */
+    .desktop-toc-content a.text-gray-900 {
+        color: #4B5563;
+        font-weight: 600;
+        background-color: rgba(17, 24, 39, 0.05);
+    }
+    
+    /* 移动端选中状态 */
+    #mobile-toc .toc-content a.text-gray-900 {
+        color: #111827;
+        font-weight: 600;
+        background-color: rgba(17, 24, 39, 0.05);
+    }
+    
+    /* 移除下划线样式 */
+    .toc-content a.underline {
+        text-decoration: none !important;
+        text-underline-offset: 0;
+    }
+    
+    /* 移动端目录动画 */
+    #mobile-toc-container {
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    /* 移动端目录按钮悬浮效果 */
+    #mobile-toc-button {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    #mobile-toc-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* 隐藏滚动条但保留滚动功能 */
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    
+    /* 目录中的文字换行 */
+    .break-words {
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+    
+    /* 移除移动端目录背景遮罩 */
+    #mobile-toc {
+        background-color: transparent;
+    }
+    
+    /* 为标题添加滚动偏移量，防止被导航栏遮挡 */
+    .prose h1,
+    .prose h2,
+    .prose h3,
+    .prose h4,
+    .prose h5,
+    .prose h6 {
+        scroll-margin-top: calc(64px + 24px); /* 导航栏高度 + 额外边距 */
+    }
+</style>
+
+    <!-- 版本标记 - 每次更新代码时请修改这里的版本号 --有文章目录跟随但是有bug>
+    <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
+    <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
+        <div class="bg-white p-2 rounded shadow-sm">
+            <span>v2025.04.15.18:00</span>
+        </div>
+    </div>
+
+    <script>
+        // 添加版本标记的提示信息
+        const versionMarker = document.getElementById('version-marker');
+        if (versionMarker) {
+            const now = new Date();
+            const buildTime = now.toLocaleString('zh-CN');
+            versionMarker.title = `最后更新: ${buildTime}`;
+        }
+        
+        // 原有的脚本内容
+    </script>
+</body>
+</html>
