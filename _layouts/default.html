@@ -410,37 +410,86 @@
 
         // 更新活动标题状态
         function updateActiveHeading(headingId) {
-            const tocLinks = document.querySelectorAll('.toc-content a');
-            tocLinks.forEach(link => {
-                const linkHeadingId = link.getAttribute('data-heading-id');
-                if (linkHeadingId === headingId) {
-                    link.classList.add('text-gray-900', 'font-medium');
-                } else {
-                    link.classList.remove('text-gray-900', 'font-medium');
-                }
+            // 移除所有链接的选中状态
+            document.querySelectorAll('.toc-content a').forEach(link => {
+                link.classList.remove('active');
             });
+            
+            // 只为当前标题添加选中状态并确保其可见
+            const activeLink = document.querySelector(`.toc-content a[data-heading-id="${headingId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+                ensureActiveLinkVisible(activeLink);
+            }
+        }
+
+        // 新增函数：确保当前活动的目录项在视图中可见
+        function ensureActiveLinkVisible(activeLink) {
+            if (window.innerWidth >= 768) { // 仅在桌面端处理
+                const tocContainer = document.querySelector('#desktop-toc .sticky');
+                if (tocContainer) {
+                    const containerRect = tocContainer.getBoundingClientRect();
+                    const linkRect = activeLink.getBoundingClientRect();
+                    
+                    // 计算相对位置
+                    const linkTop = linkRect.top - containerRect.top;
+                    const linkBottom = linkRect.bottom - containerRect.top;
+                    
+                    // 如果目录项不在可视区域内，进行滚动
+                    if (linkTop < 0 || linkBottom > containerRect.height) {
+                        // 计算目标位置，使活动项居中显示
+                        const targetScroll = tocContainer.scrollTop + linkTop - (containerRect.height - linkRect.height) / 2;
+                        
+                        tocContainer.scrollTo({
+                            top: targetScroll,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }
         }
 
         // 修改滚动监听实现
         function setupScrollSpy(headingMap) {
             let ticking = false;
+            let lastScrollTop = window.pageYOffset;
             
             function onScroll() {
                 if (!ticking) {
                     window.requestAnimationFrame(() => {
                         const navHeight = document.querySelector('nav').offsetHeight;
-                        const scrollPos = window.scrollY + navHeight + 24; // 导航栏高度 + 额外偏移
+                        const scrollPos = window.scrollY + navHeight + 24;
+                        const scrollingDown = window.pageYOffset > lastScrollTop;
+                        lastScrollTop = window.pageYOffset;
                         
                         // 找到当前可见的标题
                         let currentHeading = null;
-                        for (const [id, heading] of headingMap) {
+                        let minDistance = Infinity;
+                        
+                        // 根据滚动方向调整遍历顺序
+                        const headings = Array.from(headingMap.entries());
+                        if (!scrollingDown) {
+                            headings.reverse();
+                        }
+                        
+                        for (const [id, heading] of headings) {
                             const rect = heading.getBoundingClientRect();
                             const absoluteTop = window.pageYOffset + rect.top;
                             
-                            if (absoluteTop <= scrollPos) {
-                                currentHeading = id;
+                            // 调整距离计算方式
+                            let distance;
+                            if (scrollingDown) {
+                                distance = absoluteTop - scrollPos;
+                                if (distance < 0 && distance > -window.innerHeight) {
+                                    currentHeading = id;
+                                    break;
+                                }
                             } else {
-                                break;
+                                distance = scrollPos - absoluteTop;
+                                if (distance < 0 && distance > -window.innerHeight) {
+                                    currentHeading = id;
+                                    break;
+                                }
                             }
                         }
                         
@@ -455,7 +504,8 @@
             }
             
             window.addEventListener('scroll', onScroll, { passive: true });
-            onScroll(); // 初始化时执行一次
+            // 初始化时执行一次，确保页面加载时就能正确定位
+            setTimeout(onScroll, 100);
         }
     });
 </script>
