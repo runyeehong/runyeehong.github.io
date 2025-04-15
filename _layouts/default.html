@@ -413,7 +413,58 @@
             });
         }
 
-        // 生成文章目录
+        // 添加标题高亮效果函数
+        function highlightHeading(headingId) {
+            const heading = document.getElementById(headingId);
+            if (heading) {
+                // 移除其他标题的高亮效果
+                document.querySelectorAll('.highlight-heading').forEach(el => {
+                    el.classList.remove('highlight-heading');
+                });
+                
+                // 添加高亮效果
+                heading.classList.add('highlight-heading');
+                
+                // 2秒后移除高亮效果
+                setTimeout(() => {
+                    heading.classList.remove('highlight-heading');
+                }, 2000);
+            }
+        }
+        
+        // 修改目录点击事件处理
+        function handleTocClick(link, targetId) {
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            const navHeight = document.querySelector('nav').offsetHeight;
+                const offset = 150; // 增加偏移量，确保标题不被导航栏遮挡
+                
+                // 关闭移动端目录
+                if (window.innerWidth < 768) {
+                                closeTocMenu();
+                            }
+                
+                // 计算目标位置，增加额外空间
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - offset;
+                
+                // 平滑滚动到目标位置
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // 添加高亮效果
+                highlightHeading(targetId);
+                
+                // 更新活动标题
+                setTimeout(() => {
+                    updateActiveHeading(targetId);
+                }, 100);
+            }
+        }
+        
+        // 修改生成目录函数中的点击事件处理
         function generateTableOfContents() {
             // 获取所有标题并转换为数组以便排序
             const headingsArray = Array.from(document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6'));
@@ -452,34 +503,11 @@
                 item.appendChild(link);
                 toc.appendChild(item);
                 
-                // 点击处理
+                // 修改点击事件处理
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const targetId = link.getAttribute('href').substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    
-                    if (targetElement) {
-                        const navHeight = document.querySelector('nav').offsetHeight;
-                        const offset = 100; // 增加偏移量，确保标题完全可见
-                        
-                        // 关闭移动端目录（如果打开的话）
-                        if (window.innerWidth < 768) {
-                            closeTocMenu();
-                        }
-                        
-                        // 使用 scrollIntoView 代替 scrollTo，提供更好的滚动体验
-                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - offset;
-                        
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                        
-                        // 添加一个小延时后更新活动标题，确保滚动完成
-                        setTimeout(() => {
-                            updateActiveHeading(targetId);
-                        }, 100);
-                    }
+                    handleTocClick(link, targetId);
                 });
             });
             
@@ -598,6 +626,20 @@
     /* 移除移动端目录背景遮罩 */
     #mobile-toc {
         background-color: transparent;
+    }
+    
+    /* 修改标题高亮动画样式 */
+    @keyframes highlightFade {
+        0% { background-color: rgba(209, 213, 219, 0.5); }  /* 改为灰色系 */
+        70% { background-color: rgba(209, 213, 219, 0.5); }
+        100% { background-color: transparent; }
+    }
+    
+    .highlight-heading {
+        animation: highlightFade 2s ease-out forwards;
+        border-radius: 4px;
+        padding: 0.5rem 1rem;  /* 增加内边距 */
+        margin: -0.5rem -1rem;
     }
 </style>
 </body>
