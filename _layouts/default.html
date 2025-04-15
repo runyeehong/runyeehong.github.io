@@ -197,12 +197,14 @@
         <div id="desktop-toc" class="hidden md:block md:w-1/5 lg:w-1/5 flex-shrink-0">
         <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
           <div class="flex-1">
-            <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
-            <div class="border-b border-gray-200 mb-3"></div>
-            <div class="flex items-start">
+            <div class="md:sticky md:top-0 md:bg-white md:z-10 md:pb-3">
+              <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
+              <div class="border-b border-gray-200"></div>
+            </div>
+            <div class="flex items-start relative">
               <!-- 垂直分割线 -->
-              <div class="border-l-2 border-gray-200 h-full min-h-[50px] mr-3 sticky top-0"></div>
-              <div class="flex-1 toc-content desktop-toc-content"></div>
+              <div class="absolute left-0 top-0 bottom-0 border-l-2 border-gray-200"></div>
+              <div class="flex-1 toc-content desktop-toc-content pl-4"></div>
             </div>
           </div>
         </div>
@@ -324,6 +326,18 @@
                 let currentList = toc;
                 let lists = [toc];
                 
+                // 计算目录总高度
+                let totalHeight = 0;
+                headings.forEach((heading) => {
+                    totalHeight += heading.offsetHeight;
+                });
+                
+                // 设置垂直分割线高度
+                const verticalLine = document.querySelector('#desktop-toc .border-l-2');
+                if (verticalLine) {
+                    verticalLine.style.height = `${totalHeight}px`;
+                }
+                
                 headings.forEach((heading, index) => {
                     // 获取标题级别
                     const level = parseInt(heading.tagName.substring(1)) - 1;
@@ -354,7 +368,7 @@
                         // 创建新的子列表
                         const newList = document.createElement('ul');
                         // 设置缩进和样式，增强层级视觉效果
-                        newList.className = 'pl-4 space-y-1 mt-1 border-l border-gray-200';
+                        newList.className = 'pl-4 space-y-1 mt-1';
                         
                         // 确保lists[currentLevel]存在且有lastChild
                         if (lists[currentLevel] && lists[currentLevel].lastChild) {
@@ -392,18 +406,17 @@
                         const targetElement = document.getElementById(targetId);
                         
                         if (targetElement) {
-                            // 完全避免修改浏览器历史记录
-                            // 移除 history.replaceState 调用，不修改 URL
-                            
-                            // 改进：计算更精确的滚动位置
-                            // 获取导航栏高度
+                            // 计算精确的滚动位置
                             const navHeight = document.querySelector('nav').offsetHeight;
-                            // 添加额外的偏移量，确保标题完全可见
-                            const extraOffset = 20;
+                            const targetRect = targetElement.getBoundingClientRect();
+                            const targetTop = targetRect.top + window.pageYOffset;
                             
-                            // 使用 scrollTo 而不是修改 URL
+                            // 计算滚动位置，确保标题在视口顶部可见
+                            const scrollPosition = targetTop - navHeight - 20; // 添加20px的额外间距
+                            
+                            // 使用平滑滚动
                             window.scrollTo({
-                                top: targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - extraOffset,
+                                top: scrollPosition,
                                 behavior: 'smooth'
                             });
                             
@@ -450,8 +463,8 @@
             const navHeight = document.querySelector('nav').offsetHeight;
             const observerOptions = {
                 root: null, // 使用视口作为根
-                rootMargin: `-${navHeight + 10}px 0px -70% 0px`, // 顶部减去导航栏高度，底部减少观察区域
-                threshold: 0 // 只要有一部分可见就触发
+                rootMargin: `-${navHeight + 20}px 0px -70% 0px`, // 调整观察区域
+                threshold: 0.1 // 增加阈值以提高准确性
             };
             
             // 创建 IntersectionObserver 实例
@@ -493,14 +506,14 @@
                 if (visibleHeadingId) {
                     updateTocActiveItem(visibleHeadingId);
                 }
-            }, 50)); // 减少防抖时间，使响应更快
+            }, 50));
         }
         
         // 根据滚动位置找到最接近的标题
         function findClosestHeadingByScroll(headings) {
             const scrollPosition = window.scrollY;
             const navHeight = document.querySelector('nav').offsetHeight;
-            const scrollThreshold = scrollPosition + navHeight + 50; // 添加一些偏移量
+            const scrollThreshold = scrollPosition + navHeight + 50;
             
             let closestHeading = null;
             let closestDistance = Infinity;
