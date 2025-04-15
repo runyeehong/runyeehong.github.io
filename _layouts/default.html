@@ -429,11 +429,12 @@
                     const containerRect = tocContainer.getBoundingClientRect();
                     const linkRect = activeLink.getBoundingClientRect();
                     
-                    // 如果目录项在可视区域外，滚动到可见位置
+                    // 如果目录项在可视区域外或部分可见，滚动到完全可见位置
                     if (linkRect.top < containerRect.top || linkRect.bottom > containerRect.bottom) {
+                        // 使用 'center' 而不是 'nearest' 确保标题完全可见
                         activeLink.scrollIntoView({
                             behavior: 'smooth',
-                            block: 'nearest'
+                            block: 'center'
                         });
                     }
                 }
@@ -506,6 +507,10 @@
     /* 桌面端目录颜色调浅 */
     .desktop-toc-content a {
         color: #9CA3AF;
+        display: block;
+        overflow: visible;
+        white-space: normal;
+        word-break: break-word;
     }
     
     /* 桌面端悬停状态 - 仅改变文字颜色和加粗 */
@@ -519,6 +524,14 @@
         color: #111827;
         font-weight: 600;
         background-color: rgba(17, 24, 39, 0.05);
+    }
+    
+    /* 确保移动端目录项文本完全显示 */
+    #mobile-toc .toc-content a {
+        display: block;
+        overflow: visible;
+        white-space: normal;
+        word-break: break-word;
     }
     
     /* 桌面端选中状态 - 保留背景色 */
@@ -589,11 +602,11 @@
     }
 </style>
 
-    <!-- 版本标记 - 每次更新代码时请修改这里的版本号 ，trae继续修改目录连跳问题-->
+    <!-- 版本标记 - 每次更新代码时请修改这里的版本号 ，修复目录标题显示不全问题-->
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>01:15</span>
+            <span>02:20</span>
         </div>
     </div>
 
