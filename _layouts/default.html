@@ -252,7 +252,7 @@
         const mobileToc = document.getElementById('mobile-toc');
         const mobileTocContainer = document.getElementById('mobile-toc-container');
         const closeToc = document.getElementById('close-toc');
-        // desktopToc is already declared above
+        const desktopToc = document.getElementById('desktop-toc');
         
         // 检查是否有目录内容
         function hasTocContent() {
@@ -421,119 +421,99 @@
             });
         }
 
-        // 初始化滚动监听
-        const headings = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
-        const headingMap = new Map();
-        
-        headings.forEach(heading => {
-            headingMap.set(heading.id, heading);
-        });
-        
-        const desktopToc = document.querySelector('.desktop-toc-content');
-        let ticking = false;
-        
-        function getActiveHeading() {
-            const navHeight = document.querySelector('nav').offsetHeight;
-            let closestHeading = null;
-            let minDistance = Infinity;
+        // 修改滚动监听实现
+        function setupScrollSpy(headingMap) {
+            const desktopToc = document.querySelector('.desktop-toc-content');
+            let ticking = false;
             
-            headings.forEach(heading => {
-                const rect = heading.getBoundingClientRect();
-                // 计算标题顶部到导航栏底部的距离
-                const distance = Math.abs(rect.top - navHeight - 24);
+            function updateTocScroll(activeLink) {
+                if (!desktopToc || !activeLink) return;
                 
-                // 如果标题在视口上方且距离更近
-                if (rect.top <= navHeight + 24 && distance < minDistance) {
-                    minDistance = distance;
-                    closestHeading = heading;
-                }
-            });
-            
-            // 如果没有找到在视口上方的标题，找最接近的标题
-            if (!closestHeading) {
-                headings.forEach(heading => {
-                    const rect = heading.getBoundingClientRect();
-                    const distance = Math.abs(rect.top - navHeight - 24);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestHeading = heading;
-                    }
-                });
-            }
-            
-            return closestHeading;
-        }
-        
-        function updateToc(heading) {
-            if (!heading || !desktopToc) return;
-            
-            // 更新活动状态
-            const allLinks = desktopToc.querySelectorAll('a');
-            allLinks.forEach(link => link.classList.remove('active'));
-            
-            const activeLink = desktopToc.querySelector(`a[data-heading-id="${heading.id}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-                
-                // 检查活动链接是否在目录可视区域内
                 const tocRect = desktopToc.getBoundingClientRect();
                 const linkRect = activeLink.getBoundingClientRect();
                 
-                const isVisible = (
-                    linkRect.top >= tocRect.top &&
-                    linkRect.bottom <= tocRect.bottom
-                );
-                
-                // 如果不在可视区域内，滚动到该位置
-                if (!isVisible) {
-                    const scrollTop = activeLink.offsetTop - (tocRect.height / 2) + (linkRect.height / 2);
+                // 检查目录项是否在可视区域内
+                if (linkRect.top < tocRect.top || linkRect.bottom > tocRect.bottom) {
+                    // 计算滚动位置，使目录项居中显示
+                    const targetScrollTop = activeLink.offsetTop - (tocRect.height / 2) + (linkRect.height / 2);
                     desktopToc.scrollTo({
-                        top: scrollTop,
+                        top: targetScrollTop,
                         behavior: 'smooth'
                     });
                 }
             }
-        }
-        
-        function onScroll() {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    const activeHeading = getActiveHeading();
-                    if (activeHeading) {
-                        updateToc(activeHeading);
+
+            function findCurrentHeading() {
+                const navHeight = document.querySelector('nav').offsetHeight;
+                let currentHeading = null;
+                let minDistance = Infinity;
+
+                // 遍历所有标题，找到最接近视口顶部的标题
+                headingMap.forEach((heading, id) => {
+                    const rect = heading.getBoundingClientRect();
+                    const distance = Math.abs(rect.top - navHeight);
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        currentHeading = id;
                     }
-                    ticking = false;
                 });
-                ticking = true;
+
+                return currentHeading;
             }
-        }
-        
-        // 添加滚动事件监听
-        window.addEventListener('scroll', onScroll, { passive: true });
-        
-        // 初始化时执行一次
-        onScroll();
-        
-        // 处理目录点击事件
-        if (desktopToc) {
-            desktopToc.addEventListener('click', (e) => {
-                const link = e.target.closest('a');
-                if (link && link.hasAttribute('data-heading-id')) {
-                    e.preventDefault();
-                    const headingId = link.getAttribute('data-heading-id');
-                    const heading = document.getElementById(headingId);
-                    if (heading) {
-                        const navHeight = document.querySelector('nav').offsetHeight;
-                        const headingTop = heading.getBoundingClientRect().top + window.pageYOffset;
-                        const targetPosition = headingTop - navHeight - 24;
+
+            function onScroll() {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        const currentHeading = findCurrentHeading();
                         
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
+                        if (currentHeading) {
+                            // 移除所有活动状态
+                            document.querySelectorAll('.toc-link').forEach(link => {
+                                link.classList.remove('active');
+                            });
+                            
+                            // 设置当前活动项
+                            const activeLink = document.querySelector(`a[data-heading-id="${currentHeading}"]`);
+                            if (activeLink) {
+                                activeLink.classList.add('active');
+                                updateTocScroll(activeLink);
+                            }
+                        }
+                        
+                        ticking = false;
+                    });
+                    ticking = true;
                 }
-            });
+            }
+            
+            // 添加滚动事件监听
+            window.addEventListener('scroll', onScroll, { passive: true });
+            
+            // 初始化时执行一次
+            onScroll();
+            
+            // 添加点击目录项时的滚动处理
+            if (desktopToc) {
+                desktopToc.addEventListener('click', (e) => {
+                    const link = e.target.closest('a');
+                    if (link && link.hasAttribute('data-heading-id')) {
+                        e.preventDefault();
+                        const headingId = link.getAttribute('data-heading-id');
+                        const heading = document.getElementById(headingId);
+                        if (heading) {
+                            const navHeight = document.querySelector('nav').offsetHeight;
+                            const headingTop = heading.getBoundingClientRect().top + window.pageYOffset;
+                            const targetPosition = headingTop - navHeight - 24;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            }
         }
     });
 </script>
@@ -645,11 +625,11 @@
     }
 </style>
 
-    <!-- 版本标记 - 每次更新代码时请修改这里的版本号 -->
+    <!-- 版本标记 - 每次更新代码时请修改这里的版本号 ，最新版做个标记-->
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>0000</span>
+            <span>2025.01.01</span>
         </div>
     </div>
 
