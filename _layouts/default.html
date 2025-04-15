@@ -198,7 +198,7 @@
         <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-150px)] no-scrollbar">
           <div class="flex-1">
             <div class="md:sticky md:top-0 md:z-10 md:pb-3 bg-gray-50">
-              <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
+            <h3 class="text-base font-medium mb-3 text-gray-500">文章目录</h3>
               <div class="border-b border-gray-200"></div>
             </div>
             <div class="flex items-start relative mt-3">
@@ -460,7 +460,14 @@
                     
                     if (targetElement) {
                         const navHeight = document.querySelector('nav').offsetHeight;
-                        const offset = 60; // 额外偏移量
+                        const offset = 100; // 增加偏移量，确保标题完全可见
+                        
+                        // 关闭移动端目录（如果打开的话）
+                        if (window.innerWidth < 768) {
+                            closeTocMenu();
+                        }
+                        
+                        // 使用 scrollIntoView 代替 scrollTo，提供更好的滚动体验
                         const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - offset;
                         
                         window.scrollTo({
@@ -468,7 +475,10 @@
                             behavior: 'smooth'
                         });
                         
-                        updateActiveHeading(targetId);
+                        // 添加一个小延时后更新活动标题，确保滚动完成
+                        setTimeout(() => {
+                            updateActiveHeading(targetId);
+                        }, 100);
                     }
                 });
             });
