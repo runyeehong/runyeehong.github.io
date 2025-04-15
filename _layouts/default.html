@@ -464,13 +464,14 @@
                                     const tocRect = desktopToc.getBoundingClientRect();
                                     const tocScrollTop = desktopToc.scrollTop;
                                     
-                                    // 如果链接在可视区域外，滚动到中间位置
-                                    if (linkRect.top < tocRect.top || linkRect.bottom > tocRect.bottom) {
-                                        desktopToc.scrollTo({
-                                            top: tocScrollTop + (linkRect.top - tocRect.top) - (tocRect.height / 2) + (linkRect.height / 2),
-                                            behavior: 'smooth'
-                                        });
-                                    }
+                                    // 计算目标滚动位置，使活动项在目录中间位置
+                                    const targetScrollTop = tocScrollTop + (linkRect.top - tocRect.top) - (tocRect.height / 2) + (linkRect.height / 2);
+                                    
+                                    // 使用平滑滚动
+                                    desktopToc.scrollTo({
+                                        top: targetScrollTop,
+                                        behavior: 'smooth'
+                                    });
                                 }
                             }
                         }
@@ -598,7 +599,7 @@
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>666667777777</span>
+            <span>20:00</span>
         </div>
     </div>
 
