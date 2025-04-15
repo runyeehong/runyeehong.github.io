@@ -402,9 +402,23 @@
         // 更新活动标题状态
         function updateActiveHeading(headingId) {
             const tocLinks = document.querySelectorAll('.toc-content a');
+            const currentHeading = document.getElementById(headingId);
+            
+            if (!currentHeading) return;
+            
+            // 获取当前标题的层级
+            const currentLevel = parseInt(currentHeading.tagName.substring(1));
             
             tocLinks.forEach(link => {
                 const href = link.getAttribute('href').substring(1);
+                const linkHeading = document.getElementById(href);
+                
+                if (!linkHeading) return;
+                
+                // 获取链接对应标题的层级
+                const linkLevel = parseInt(linkHeading.tagName.substring(1));
+                
+                // 只有当链接对应的标题ID与当前活动标题ID相同时才高亮
                 if (href === headingId) {
                     link.classList.add('text-gray-900', 'font-medium');
                 } else {
@@ -434,16 +448,16 @@
         
         // 修改目录点击事件处理
         function handleTocClick(link, targetId) {
-                        const targetElement = document.getElementById(targetId);
-                        
-                        if (targetElement) {
-                            const navHeight = document.querySelector('nav').offsetHeight;
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                const navHeight = document.querySelector('nav').offsetHeight;
                 const offset = 150; // 增加偏移量，确保标题不被导航栏遮挡
                 
                 // 关闭移动端目录
                 if (window.innerWidth < 768) {
-                                closeTocMenu();
-                            }
+                    closeTocMenu();
+                }
                 
                 // 计算目标位置，增加额外空间
                 const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - offset;
@@ -647,7 +661,7 @@
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>v2024.03.15.14:55</span>
+            <span>v2024.03.15.15:15</span>
         </div>
     </div>
 
