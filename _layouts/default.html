@@ -168,7 +168,7 @@
         
         <!-- 移动端目录按钮 (固定在右下角) -->
         {% if page.toc %}
-        <button id="mobile-toc-button" class="md:hidden fixed bottom-6 right-6 bg-gray-800 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg z-50 hidden">
+        <button id="mobile-toc-button" class="md:hidden fixed bottom-12 right-6 bg-gray-800 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg z-50 hidden">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
         </svg>
@@ -510,9 +510,9 @@
         // 更新目录中的活动项
         function updateTocActiveItem(headingId) {
             document.querySelectorAll('.toc-content a').forEach(a => {
-                a.classList.remove('text-gray-900', 'font-medium', 'underline');
-                if (a.getAttribute('data-heading-id') === headingId) {
-                    a.classList.add('text-gray-900', 'font-medium', 'underline');
+                a.classList.remove('text-gray-900', 'font-medium');
+                 if (a.getAttribute('data-heading-id') === headingId) {
+                    a.classList.add('text-gray-900', 'font-medium');
                     
                     // 确保活动项在目录视图中可见（自动滚动）
                     const tocContainer = a.closest('.toc-content');
@@ -572,30 +572,39 @@
         color: #9CA3AF; /* 更浅的灰色 */
     }
     
+    /* 悬停状态 - 加粗并显示背景色，去掉下划线 */
     .toc-content a:hover {
         color: #111827;
+        font-weight: 600;
         background-color: rgba(17, 24, 39, 0.05);
+        text-decoration: none;
     }
     
     /* 桌面端目录悬停颜色 */
     .desktop-toc-content a:hover {
-        color: #6B7280; /* 悬停时的颜色也相应调浅 */
+        color: #4B5563; /* 悬停时的颜色也相应调浅 */
+        font-weight: 600;
+        background-color: rgba(17, 24, 39, 0.05);
     }
     
-    /* 选中状态 - 加粗并显示下划线 */
+    /* 选中状态 - 加粗并显示背景色，去掉下划线 */
     .toc-content a.text-gray-900 {
         color: #111827;
         font-weight: 600;
+        background-color: rgba(17, 24, 39, 0.05);
+        text-decoration: none !important;
     }
     
     /* 桌面端目录选中状态 */
     .desktop-toc-content a.text-gray-900 {
         color: #4B5563; /* 选中时的颜色也相应调浅 */
+        background-color: rgba(17, 24, 39, 0.05);
     }
     
+    /* 移除下划线样式 */
     .toc-content a.underline {
-        text-decoration: underline;
-        text-underline-offset: 2px;
+        text-decoration: none !important;
+        text-underline-offset: 0;
     }
     
     /* 移动端目录动画 */
