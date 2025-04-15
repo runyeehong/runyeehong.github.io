@@ -60,7 +60,7 @@ toc: true
 
 **解决方案：**
 
-1. **素材库：** 素材库的来源可以分三类：第一是，可以是由内部新媒体运营策划人员原创，并由制度规定与发起员工或上下游伙伴的营销推广任务等，实现快速分享与推广，降低营销管理与协作成本。第二是，可以从第三方平台获取，比如从抖音热点宝获取和业务目标相关的高热点视频，比如“视频+食补养生” 。将爆款视频解析成文字，供员工改编使用。第三是可以由员工自行上传。
+1. **素材库：** 素材库的来源可以分三类：第一是，可以是由内部新媒体运营策划人员原创，并由制度规定与发起员工或上下游伙伴的营销推广任务等，实现快速分享与推广，降低营销管理与协作成本。第二是，可以从第三方平台获取，比如从抖音热点宝获取和业务目标相关的高热点视频，比如"视频+食补养生" 。将爆款视频解析成文字，供员工改编使用。第三是可以由员工自行上传。
 2. **竞品监测：** 更进一步的营销内容平台，可以提供内容竞品分析工具：自定义竞品账号，监测账号发布的短视频或直播内容，供运营和销售学习和借鉴，差异化营销竞争，提高营销效果。
 
 ![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=YTg1ZTdlZTFjMDM4NTk0NGRlZDljNGFkOWEyMTQxMGVfU0NjVzBCVWlGMUhxR3RxZjQ5dmx1S2E1NVVnbEtEeXdfVG9rZW46WEZxcGJCSzFYb0VmTWR4dFhSNWN4UFRTbjBkXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=YjExNzAxM2QxYzU1NWJiYWFjNzJmMmJiZTBiNWNkYjhfb2xCN005ZE1iNVQ1TGdtTHY1V2dPeE1Edm5LNkt6MGdfVG9rZW46S044dmI0NXBwb2NmTDV4dkYxV2NtbWs5blplXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)
@@ -122,7 +122,7 @@ toc: true
 
 1. **标签库：** 比如在属性标签库中，根据客户的人口属性、购买意向等维护添加好标签。不过标签总归是关键环节和留资内容的关键词，建立标签库时应考虑标签可承接的实际场景，如果过于具体反而会增加运营销售人员的辨别成本。目前市面上有成体系的标签库模型，比如RFM等可借鉴。
 2. **手动打标签：** 当面对同一个客户，不同部门交接服务后，必定有客户的一定认知，此时各个环节的人员则可以快速打上标签，即使作为月度考核内容，也不是太大负担。
-3. **自动打标签：** 根据客户留资渠道、基础信息（地区、年龄等）、聊天关键词、在平台中的行为轨迹、消费属性等自动的给客户添加标签。比如在营养康疗领域，针对“高血脂”标签，设定当客户资料写入自动建立。那么当客户填写资料包含了此关键词后，标签自动建立。又如营养康疗行业来说，治疗管理时间较长，可以利用时间类型的标签画像，给客户打上“1疗程”，30天后会自动变更为“2疗程”。这样做，不仅画像更为准确，也节省客户画像的维护的成本。
+3. **自动打标签：** 根据客户留资渠道、基础信息（地区、年龄等）、聊天关键词、在平台中的行为轨迹、消费属性等自动的给客户添加标签。比如在营养康疗领域，针对"高血脂"标签，设定当客户资料写入自动建立。那么当客户填写资料包含了此关键词后，标签自动建立。又如营养康疗行业来说，治疗管理时间较长，可以利用时间类型的标签画像，给客户打上"1疗程"，30天后会自动变更为"2疗程"。这样做，不仅画像更为准确，也节省客户画像的维护的成本。
 
 ![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=YTc1MTc2MDJjOTYzMWVlMzBjNWE3NzAxMDI0NGQxNDlfZFRMdzlaMENrd1drN29mdnhXUGt5UDFtd1pwckdJTEpfVG9rZW46VHNTdGJNbGx3bzJraUR4VTAwNGNWcXVzbmhnXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=YzUwNWMxZWJkODdjOGVlNDIwNjUxZTU4MWI5M2VjNmFfcmZLbHdUbG1OWUJZV0xuZWU2enNSVlU3cGVkUHFhdHVfVG9rZW46VXRkTGJQazhab29BZ3V4NDhWT2NMaGtnbmRkXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2U2YjhmNzg1NzA2NmFkZWQ4Nzg3OGZkMWYxMDVmMGZfOG1nWm9ESlU5WmZkS0VCOFBiZTZiM1VVcG1qU0FVV0xfVG9rZW46T3hTRWJOcEV2b0dQb254dWJxbGNHN3BHbnhkXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)
 
@@ -164,7 +164,7 @@ toc: true
 
 但是当社群数量多的时候，一个运营人员会负责很多个群，开群的时间也不一样，如果要记住每个群的进度是一件比较难的事情，而且每天要花大量的时间在群互动和发消息上，也会导致过往构建的大量客户服务群，逐渐变成僵尸群，不断的拉新群活跃，维护成本高。
 
-**群** **SOP** **：** 可以提升群运营的效率， 降低成本，让运营人员将更多的精力放在与用户互动上，而非机械地运营操作。 包括，执行SOP设定、群日历，群打卡等互动模式设定。
+**群 **SOP** ：** 可以提升群运营的效率， 降低成本，让运营人员将更多的精力放在与用户互动上，而非机械地运营操作。 包括，执行SOP设定、群日历，群打卡等互动模式设定。
 
 ![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=NjcyY2IxOTAyOTBkMTlmMTFmMmViNGY3Y2Y3NzExZTNfU1ZTSUs4akRNdTlmUFkzQ3ZjRDBZc0M1ZW5yaVlCOGRfVG9rZW46SWxRRWJKSGdYb1B3YzJ4MmlQS2NmVnJTbnZkXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)
 
@@ -196,7 +196,7 @@ toc: true
 **解决方案：** 商机管理能够帮助管理者和各业务线员工，清晰地了解到各员工跟进客户的情况，从而有利于挖掘线上转化差的问题点所在。此外，还能帮助提取出销售最佳实践的方法论，然后快速复制给团队其他人，帮助团队整体的营销战斗力提升到一个新高度。
 
 1. **商机建立：** 可编辑填写信息包括：负责人、商机名称、客户名称、商机金额、预计成交日期、下次联系时间、关联产品、折扣、意向成交总金额等。
-2. **编辑商机** **SOP** **：** 为商机建立不同的阶段，任务，负责人，推进的条件，达到有秩序精细化的跟单流程管理。
+2. **编辑商机 **SOP** ：** 为商机建立不同的阶段，任务，负责人，推进的条件，达到有秩序精细化的跟单流程管理。
 3. **商机查看：** 多商机推进时，以阶段性为基准，预览商机看板，管理者随时总览商机概况，还可以根据历史商机或商机推进计划，与实际商机推进时间做比较，对延期或即将延期的商机做警示，帮助员工及时发现客户跟进风险点。
 
 ![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=M2ZmZThjMDgyNDhkOTBjMmRjYTE1N2Y3NjQ3MTFjMTlfMU9OOVFJVWo5T3IxMG5McTNmUFM1OGg3NXBiZ1B0ZmhfVG9rZW46T0xBa2JKWUg2b0RZWmJ4MEFLeWNJV3E4bmVlXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=MWM0MGE1MTBiMTNjMDM1MGE1MmM4MTkzZWY0ODAwMjBfQ2h0NDBqZ3hvZGtUcXBNMWk4aWVjNmNFa3VWV1hqZ01fVG9rZW46V2Z5cGJMbmVNb0Vud1R4M0pjSWMxUVRibmRiXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTBjNWRjMGE1NjI2ZWYwOWY4NjYwMjFmNGRlYWQ1MzBfZ3NMdWgwbWlSQ2hJV0FHd3E4WVFKMXRyQUJOYllsOXVfVG9rZW46Snp3V2JjMFF6b3l1V2F4OWN1NmNTbU41blNmXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)
@@ -212,7 +212,7 @@ toc: true
 **解决方案：**
 
 1. **敏感词监控:** 通过对接企微API，监测销售或客服人员的规范用词，比如在教育行业，将诸如包过、100%通过率这样的保证，设置为敏感词，员工一旦触发，给予警示。
-2. **敏感词动作监控：** 比如将“删除客户”、“被客户删除”、“超时回复”等动作设置为敏感动作，员工一旦触发，给予警示，同时能够及时追溯复盘，分析原因，在以后尽量避免该问题发生。
+2. **敏感词动作监控：** 比如将"删除客户"、"被客户删除"、"超时回复"等动作设置为敏感动作，员工一旦触发，给予警示，同时能够及时追溯复盘，分析原因，在以后尽量避免该问题发生。
 
 ![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=NWIwMDcwMWU1YmQ0ZTBmODc5NTcyZWYxODczYTMzMGZfS1psNEoxYXlsSjc5ZU9jZ1ZnSVpUQmZaRnhzMWxhTjNfVG9rZW46U2pQZGJSckVub1U4MEd4TEp3aGNrQXVWblBlXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=NGMyMDJhNWVlMDJjZjZlYmIzODllNzBkNzNhNTY1NWRfaWswaUpwdWRndGM3dGhTdGZ2aG8wbkJQYTJOQjY0NE9fVG9rZW46WmVVNGJQM3p6b2ZGQTR4b01OTGNkbDhWblplXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)
 
@@ -324,7 +324,7 @@ toc: true
 **方案说明：**
 
 1. AI图文：提供营销文案或图片创作灵感，提高营销运营人员的内容营销效率。
-2. AI二创：热点媒体平台，比如抖音的热点宝获取和业务目标相关的高热点视频，比如“视频+食补养生” 。然后提供热门文案修改等二创编辑，避开平台审核同时助力内容曝光，提高线索收集量。
+2. AI二创：热点媒体平台，比如抖音的热点宝获取和业务目标相关的高热点视频，比如"视频+食补养生" 。然后提供热门文案修改等二创编辑，避开平台审核同时助力内容曝光，提高线索收集量。
 3. 视频混剪：批量式生成项目视频，用于投放在不同账号品宣，减少媒体平台去重机制屏蔽，助力内容曝光，提高线索收集量。
 
 ![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=OWMwY2IzZTgzZTMzODcyZjgzZjlmYTQzNTdkNWU3NTZfNTg0cUlkZG1hVndEMWRlajFybUk3S1BHblI1WEx5WUdfVG9rZW46S05DWWJMTUlWb01wQ2R4U2Z4UmNscHhUbkdkXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=MDQzYTRiYWE0MTdjOGIzM2FlMTQ4NTMzMTYzMDMwYTdfOGgwUzc3UXdLVG80YW1KQXpMYnphM1V4cGZaelBid21fVG9rZW46S0dZZGJxRTNNbzl0SmN4TEI1Z2NFV1NEbmRjXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)
@@ -343,7 +343,7 @@ toc: true
 
 通过AI对电话、聊天等互动数据做获取和整理，自动生成线索跟进纪要、客户服务纪要，提高线索及客户数据的准确性、及时性，减少人工输入成本，从而更好地管理客户关系。 同时可以让其根据纪要内容提供下一步的建议。
 
-1. AI销售纪要：纷享销客AI销售纪要。通过对目标客户全部历史跟进记录智能分析，并定义其结构化的总结为“需求关注点变化”、“跟进进度”、“风险”，帮助销售进行下一步跟进。
+1. AI销售纪要：纷享销客AI销售纪要。通过对目标客户全部历史跟进记录智能分析，并定义其结构化的总结为"需求关注点变化"、"跟进进度"、"风险"，帮助销售进行下一步跟进。
 2. AI客服纪要：纷享销客AI客服纪要，提供了会话总结、话术推荐、业务单查询等内容。会话内容总结是通过调取与客户的聊天记录（可定义时间段），快速提炼客户问题查找关联订单，让员工处理问题更加高效 。话术推荐是基于聊天内容，智能识别用户咨询意图，查找并推荐知识库中的方案，便于员工快速理解并响应客户需求。
 
 ![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=N2VhMGQ5Yjc3NGQzYmI4MTVjMWUxYzg4YmRiYTFiNzFfYVZhUXNRNmpzWDhqYk1pZXVESUhmS1REczU4dnBBVTBfVG9rZW46RFZ2d2JjRWdHb0tydHB4blRWc2Nqa1BHbmRkXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=MGM3M2NiYTRmZmRjMTFkYjRiMDkxZWYyOWNiNGI3ZmFfZ1lmdmNEVUEzS09CV0ZCdkhqUXFkZURHRVo3QVFVaGNfVG9rZW46Q3M5R2JhTUhub0k4d094NVBNRWNEVkIybmdoXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=Yjg5NWE1YmI5YTQwNzYxOGI3ZDNkN2RmNWYwOTdmY2FfakpNbWFBYVlDQU5pZ2R6WlBnblNBNUlnTkpkQkN2WFRfVG9rZW46R2Jrc2JOUmpvb05vMW54ZEYzVmNKM0ttbndkXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)![](https://jhwp8z0psn.feishu.cn/space/api/box/stream/download/asynccode/?code=OTU4MWE4YWZhOTRmMTU3Mzc1ODhmMjBiMDZhOTAyODRfUFRTNHBlUTVTS0U0S0dtY0RyVjluZzFZVUxKOXNXZXBfVG9rZW46SndEMWIzemFYb2RhcDV4RzE2T2N1cWlXbmhmXzE3NDQ2OTY1Nzk6MTc0NDcwMDE3OV9WNA)
