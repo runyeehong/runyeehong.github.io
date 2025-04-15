@@ -423,78 +423,61 @@
 
         // 修改滚动监听实现
         function setupScrollSpy(headingMap) {
-            let ticking = false;
             const desktopToc = document.querySelector('.desktop-toc-content');
-            let lastScrollPosition = 0;
+            let ticking = false;
             
+            function updateTocScroll(activeLink) {
+                if (!desktopToc || !activeLink) return;
+                
+                const tocRect = desktopToc.getBoundingClientRect();
+                const linkRect = activeLink.getBoundingClientRect();
+                
+                // 检查目录项是否在可视区域内
+                if (linkRect.top < tocRect.top || linkRect.bottom > tocRect.bottom) {
+                    // 计算滚动位置，使目录项居中显示
+                    const targetScrollTop = activeLink.offsetTop - (tocRect.height / 2) + (linkRect.height / 2);
+                    desktopToc.scrollTo({
+                        top: targetScrollTop,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
+            function findCurrentHeading() {
+                const navHeight = document.querySelector('nav').offsetHeight;
+                let currentHeading = null;
+                let minDistance = Infinity;
+
+                // 遍历所有标题，找到最接近视口顶部的标题
+                headingMap.forEach((heading, id) => {
+                    const rect = heading.getBoundingClientRect();
+                    const distance = Math.abs(rect.top - navHeight);
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        currentHeading = id;
+                    }
+                });
+
+                return currentHeading;
+            }
+
             function onScroll() {
                 if (!ticking) {
                     requestAnimationFrame(() => {
-                        const navHeight = document.querySelector('nav').offsetHeight;
-                        const scrollPos = window.scrollY + navHeight + 24;
-                        const isScrollingUp = window.scrollY < lastScrollPosition;
-                        lastScrollPosition = window.scrollY;
-                        
-                        // 找到当前可见的标题
-                        let currentHeading = null;
-                        let lastVisibleHeading = null;
-                        let firstVisibleHeading = null;
-                        let minDistance = Infinity;
-                        let nearestHeading = null;
-                        
-                        for (const [id, heading] of headingMap) {
-                            const rect = heading.getBoundingClientRect();
-                            const absoluteTop = window.pageYOffset + rect.top;
-                            const distance = Math.abs(rect.top - navHeight);
-                            
-                            // 记录最近的标题
-                            if (distance < minDistance) {
-                                minDistance = distance;
-                                nearestHeading = id;
-                            }
-                            
-                            if (absoluteTop <= scrollPos) {
-                                lastVisibleHeading = id;
-                                if (!firstVisibleHeading) {
-                                    firstVisibleHeading = id;
-                                }
-                                if (rect.top <= navHeight + 24) {
-                                    currentHeading = id;
-                                }
-                            }
-                        }
-                        
-                        // 如果没有找到当前可见的标题，使用最近的标题
-                        if (!currentHeading) {
-                            currentHeading = nearestHeading;
-                        }
+                        const currentHeading = findCurrentHeading();
                         
                         if (currentHeading) {
-                            // 更新活动标题状态
+                            // 移除所有活动状态
                             document.querySelectorAll('.toc-link').forEach(link => {
                                 link.classList.remove('active');
                             });
                             
+                            // 设置当前活动项
                             const activeLink = document.querySelector(`a[data-heading-id="${currentHeading}"]`);
-                            if (activeLink && desktopToc) {
+                            if (activeLink) {
                                 activeLink.classList.add('active');
-                                
-                                // 检查活动项是否在目录的可视区域内
-                                const linkRect = activeLink.getBoundingClientRect();
-                                const tocRect = desktopToc.getBoundingClientRect();
-                                const isVisible = (
-                                    linkRect.top >= tocRect.top &&
-                                    linkRect.bottom <= tocRect.bottom
-                                );
-                                
-                                // 如果不在可视区域内，滚动到该位置
-                                if (!isVisible) {
-                                    const targetScrollTop = activeLink.offsetTop - (tocRect.height / 2) + (linkRect.height / 2);
-                                    desktopToc.scrollTo({
-                                        top: targetScrollTop,
-                                        behavior: 'smooth'
-                                    });
-                                }
+                                updateTocScroll(activeLink);
                             }
                         }
                         
@@ -504,8 +487,11 @@
                 }
             }
             
+            // 添加滚动事件监听
             window.addEventListener('scroll', onScroll, { passive: true });
-            onScroll(); // 初始化时执行一次
+            
+            // 初始化时执行一次
+            onScroll();
             
             // 添加点击目录项时的滚动处理
             if (desktopToc) {
@@ -643,7 +629,7 @@
     <!-- 版本号格式：v年.月.日.序号，例如 v2024.03.14.1 -->
     <div id="version-marker" class="fixed bottom-4 right-4 text-xs text-gray-400 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help z-50">
         <div class="bg-white p-2 rounded shadow-sm">
-            <span>333</span>
+            <span>22:48</span>
         </div>
     </div>
 
