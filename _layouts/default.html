@@ -227,6 +227,9 @@
         </div>
     </footer>
 <!-- 在页脚之后，body结束标签之前添加 -->
+ <!-- 引入图片处理脚本 -->
+<script src="{{ '/js/main.js' | relative_url }}"></script>
+<script src="{{ '/scripts/image-grid.js' | relative_url }}"></script>
 <script>
     // 移动端菜单交互
     document.addEventListener('DOMContentLoaded', function() {
@@ -483,6 +486,19 @@
     });
 </script>
 <style>
+/* 图片网格基础样式 */
+.image-grid {
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .image-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+  }
+}
+
     /* 目录样式 */
     .toc-content ul {
         list-style: none;
