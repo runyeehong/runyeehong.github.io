@@ -222,7 +222,7 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- 文章1 -->
-                <a href="/blogs/crm-analysis-report/" class="block">
+                <a href="/_blogs/crm-analysis-report/" class="block">
                     <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
                         <div class="flex items-start">
                             <div class="flex-shrink-0 bg-blue-100 p-3 rounded-lg">
@@ -287,6 +287,10 @@
             </div>
             <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
                 <p>© 2025 pmrunyee Portfolio. All rights reserved.</p>
+                <!-- 版本标记 - 每次更新代码时请修改这里的版本号 -->
+                <div id="version-marker" class="mt-2 text-xs text-gray-500 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help">
+                    <span>0419</span>
+                </div>
             </div>
         </div>
     </footer>
@@ -313,6 +317,14 @@
                     mobileMenu.classList.add('hidden');
                 });
             });
+        }
+        
+        // 添加版本标记的提示信息
+        const versionMarker = document.getElementById('version-marker');
+        if (versionMarker) {
+            const now = new Date();
+            const buildTime = now.toLocaleString('zh-CN');
+            versionMarker.title = `最后更新: ${buildTime}`;
         }
     });
 </script>
