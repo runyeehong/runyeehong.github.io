@@ -9,38 +9,9 @@
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/article.css">
 </head>
+{% include head.html %}
 <body class="font-sans bg-gray-50 text-gray-800">
-    <nav class="fixed w-full bg-white shadow-sm z-10">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="/" class="text-xl font-bold text-dark">pmrunyee</a>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="/" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">主页</a>
-                    <a href="/#projects" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">作品</a>
-                    <a href="/#blogs" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">博客</a>
-                </div>
-                <!-- 移动端菜单按钮 -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-button" class="text-gray-500 hover:text-primary">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- 移动端菜单内容 -->
-            <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg rounded-b-lg mt-1">
-                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100">主页</a>
-                    <a href="/#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100">作品</a>
-                    <a href="/#blogs" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100">博客</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    {% include nav.html %}
 
     <!-- 在 <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto"> 之后添加 -->
     <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
@@ -109,25 +80,9 @@
         </div>
     </div>
 
-    <footer class="bg-dark text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <h3 class="text-2xl font-bold mb-2">pmrunyee</h3>
-                    <p class="text-gray-300">Wechat/Email：yysafari@foxmail.com</p>
-                </div>
-            </div>
-            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
-                <p>© 2025 pmrunyee Portfolio. All rights reserved.</p>
-                <!-- 版本标记 - 手动更新版本信息 -->
-                <div id="version-marker" class="mt-2 text-xs text-gray-500 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help">
-                    <span>2000</span>
-                </div>
-            </div>
-        </div>
-    </footer>
-<!-- 引入文章页面专用的JavaScript文件 -->
-<script src="/assets/js/article.js"></script>
-
+    {% include footer.html %}
+    
+    <!-- 引入文章页面专用的JavaScript文件 -->
+    <script src="/assets/js/article.js"></script>
 </body>
 </html>
