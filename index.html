@@ -13,59 +13,7 @@
     <!-- 自定义样式 -->
     <link rel="stylesheet" href="assets/css/main.css">
     
-    <!-- 内联样式确保导航栏选中态正确显示 -->
-    <style>
-        .nav-link-active {
-            color: black !important;
-            font-weight: 500 !important;
-            border-bottom: 2px solid black !important;
-        }
-        
-        /* 标签样式调整 */
-        .tag-saas, .tag-cloud, .tag-enterprise, .tag-collab, .tag-crm, .tag-ai, .tag-method {
-            display: inline-block;
-            padding: 0.15rem 0.5rem;
-            font-size: 0.8rem;
-            font-weight: 500;
-            border-radius: 9999px;
-            white-space: nowrap;
-        }
-        
-        .tag-saas {
-            background-color: #e0e7ff;
-            color: #4338ca;
-        }
-        
-        .tag-cloud {
-            background-color: #dbeafe;
-            color: #1e40af;
-        }
-        
-        .tag-enterprise {
-            background-color: #fee2e2;
-            color: #b91c1c;
-        }
-        
-        .tag-collab {
-            background-color: #dcfce7;
-            color: #15803d;
-        }
-        
-        .tag-crm {
-            background-color: #ffedd5;
-            color: #c2410c;
-        }
-        
-        .tag-ai {
-            background-color: #f3e8ff;
-            color: #7e22ce;
-        }
-        
-        .tag-method {
-            background-color: #cffafe;
-            color: #0e7490;
-        }
-    </style>
+    <!-- 所有样式已移至main.css文件 -->
     
     <!-- 自定义脚本 -->
     <script src="assets/js/main.js" defer></script>
@@ -287,46 +235,14 @@
             </div>
             <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
                 <p>© 2025 pmrunyee Portfolio. All rights reserved.</p>
-                <!-- 版本标记 - 每次更新代码时请修改这里的版本号 -->
+                <!-- 版本标记 - 手动更新版本信息 -->
                 <div id="version-marker" class="mt-2 text-xs text-gray-500 opacity-50 hover:opacity-100 transition-opacity duration-200 cursor-help">
-                    <span>0419</span>
+                    <span>2000</span>
                 </div>
             </div>
         </div>
     </footer>
 
-<!-- 在页脚之后，body结束标签之前添加 -->
-<script>
-    // 移动端菜单交互
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.toggle('hidden');
-            });
-            
-            // 点击菜单项后自动关闭菜单
-            const mobileMenuItems = mobileMenu.querySelectorAll('a');
-            mobileMenuItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    // 移除任何可能的焦点效果
-                    this.blur();
-                    // 立即隐藏菜单
-                    mobileMenu.classList.add('hidden');
-                });
-            });
-        }
-        
-        // 添加版本标记的提示信息
-        const versionMarker = document.getElementById('version-marker');
-        if (versionMarker) {
-            const now = new Date();
-            const buildTime = now.toLocaleString('zh-CN');
-            versionMarker.title = `最后更新: ${buildTime}`;
-        }
-    });
-</script>
+<!-- 所有JavaScript代码已移至main.js文件 -->
 </body>
 </html>

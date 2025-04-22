@@ -28,4 +28,32 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.remove('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
         });
     });
+    
+    // 移动端菜单交互
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 点击菜单项后自动关闭菜单
+        const mobileMenuItems = mobileMenu.querySelectorAll('a');
+        mobileMenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // 移除任何可能的焦点效果
+                this.blur();
+                // 立即隐藏菜单
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    }
+    
+    // 版本标记使用手动更新的方式
+    // 如需更新版本号，请直接修改HTML中的版本号文本
+    const versionMarker = document.getElementById('version-marker');
+    if (versionMarker) {
+        versionMarker.title = "版本号 - 手动更新";
+    }
 });

@@ -6,10 +6,10 @@ body {
 }
 
 /* 标签样式 - 确保这些样式被正确应用 */
-.tag {
+.tag-saas, .tag-cloud, .tag-enterprise, .tag-collab, .tag-crm, .tag-ai, .tag-method {
     display: inline-block;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.8rem;
     font-weight: 500;
     border-radius: 9999px;
     white-space: nowrap;
