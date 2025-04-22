@@ -37,6 +37,7 @@ include:
   - 'css'
   - 'fonts'
   - 'favicon.ico'
+  - index.html
 exclude:
   - 'Gemfile'
   - 'Gemfile.lock'
