@@ -15,65 +15,17 @@ tailwind.config = {
     }
 }
 
-// 导航栏交互
+// 导航栏交互 - 使用老版本的交互逻辑
 document.addEventListener('DOMContentLoaded', function() {
-    const isMobile = () => window.innerWidth < 768;
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-
-    // 移动端菜单切换
-    if (mobileMenuButton && mobileMenu) {
-        console.log('Mobile menu elements found'); // 调试日志
-        mobileMenuButton.addEventListener('click', function() {
-            console.log('Menu button clicked'); // 调试日志
-            mobileMenu.classList.toggle('hidden');
-            console.log('Menu visibility:', !mobileMenu.classList.contains('hidden')); // 调试日志
-        });
-    } else {
-        console.log('Mobile menu elements not found:', { 
-            button: !!mobileMenuButton, 
-            menu: !!mobileMenu 
-        }); // 调试日志
-    }
-
     // 更新导航栏选中状态
     document.querySelectorAll('nav a').forEach(link => {
-        if (link.classList.contains('text-xl')) return; // 跳过 logo 链接
-
         link.addEventListener('click', function() {
-            const isDesktop = !isMobile();
-            
-            // 移动端菜单点击后关闭
-            if (!isDesktop) {
-                mobileMenu.classList.add('hidden');
-            }
-
-            // 更新选中状态
             document.querySelectorAll('nav a').forEach(el => {
-                if (el.classList.contains('text-xl')) return; // 跳过 logo 链接
-                
-                if (isDesktop) {
-                    // 桌面端样式
-                    el.classList.remove('nav-link-active');
-                    el.classList.add('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
-                } else {
-                    // 移动端样式
-                    el.classList.remove('nav-link-active');
-                }
+                el.classList.remove('nav-link-active');
+                el.classList.add('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
             });
-
-            // 添加新的选中状态
             this.classList.add('nav-link-active');
-            if (isDesktop) {
-                this.classList.remove('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
-            }
+            this.classList.remove('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
         });
-    });
-
-    // 处理窗口大小变化
-    window.addEventListener('resize', () => {
-        if (!isMobile()) {
-            mobileMenu.classList.add('hidden');
-        }
     });
 });
