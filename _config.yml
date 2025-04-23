@@ -1,3 +1,9 @@
+# 网站设置
+title: pmrunyee
+description: B2B产品经理，目前在研究CRM
+baseurl: ""
+url: "https://runyeehong.github.io"
+
 version: "1.0.0"
 # _config.yml (修正版)
 collections:
