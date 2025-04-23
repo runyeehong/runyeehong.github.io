@@ -17,15 +17,35 @@ tailwind.config = {
 
 // 导航栏交互
 document.addEventListener('DOMContentLoaded', function() {
- // 更新导航栏选中状态
- document.querySelectorAll('nav a').forEach(link => {
-    link.addEventListener('click', function() {
-        document.querySelectorAll('nav a').forEach(el => {
-            el.classList.remove('nav-link-active');
-            el.classList.add('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
+    // 移动端菜单切换
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
         });
-        this.classList.add('nav-link-active');
-        this.classList.remove('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
-    });
-});
+        
+        // 点击移动端菜单项后自动关闭菜单
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    }
+    
+    // 只为桌面端导航添加选中态
+    const desktopNav = document.querySelector('.hidden.md\\:flex');
+    if (desktopNav) {
+        desktopNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                desktopNav.querySelectorAll('a').forEach(el => {
+                    el.classList.remove('nav-link-active');
+                    el.classList.add('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
+                });
+                this.classList.add('nav-link-active');
+                this.classList.remove('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
+            });
+        });
+    }
 });
