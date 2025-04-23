@@ -22,16 +22,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileMenu = document.getElementById('mobile-menu');
     
     if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
+        // 同时支持点击和触摸事件
+        ['click', 'touchend'].forEach(eventType => {
+            mobileMenuButton.addEventListener(eventType, function(e) {
+                // 防止事件冒泡和默认行为
+                e.preventDefault();
+                e.stopPropagation();
+                mobileMenu.classList.toggle('hidden');
+            }, {passive: false});
         });
         
         // 点击移动端菜单项后自动关闭菜单
         mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function() {
-                mobileMenu.classList.add('hidden');
+            ['click', 'touchend'].forEach(eventType => {
+                link.addEventListener(eventType, function(e) {
+                    // 触摸事件需要停止冒泡，但允许默认跳转行为
+                    if (eventType === 'touchend') {
+                        e.stopPropagation();
+                    }
+                    mobileMenu.classList.add('hidden');
+                }, {passive: true});
             });
         });
+        
+        // 点击或触摸文档其他区域时关闭菜单
+        document.addEventListener('click', function(e) {
+            if (mobileMenu && !mobileMenu.classList.contains('hidden') && 
+                !mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+        
+        document.addEventListener('touchend', function(e) {
+            if (mobileMenu && !mobileMenu.classList.contains('hidden') && 
+                !mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        }, {passive: true});
     }
     
     // 只为桌面端导航添加选中态
