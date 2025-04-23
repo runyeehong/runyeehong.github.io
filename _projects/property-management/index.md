@@ -1,7 +1,7 @@
 ---
 title: "物业管理平台"
 date: 2023-10-01
-layout: default
+layout: post
 permalink: /projects/property-management/
 toc: true
 ---

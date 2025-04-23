@@ -1,7 +1,7 @@
 ---
 title: "CRMBI分析报告"
 date: 2023-10-01
-layout: default
+layout: post
 permalink: /blogs/crmbi-analysis-report/
 toc: true
 ---

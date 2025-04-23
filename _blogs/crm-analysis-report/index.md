@@ -1,7 +1,7 @@
 ---
 title: "CRM分析报告"
 date: 2023-10-01
-layout: default
+layout: post
 permalink: /blogs/crm-analysis-report/
 toc: true
 ---
