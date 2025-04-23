@@ -1,0 +1,60 @@
+/* 全局样式 */
+body {
+    font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+    background-color: #F9FAFB;
+    color: #1F2937;
+}
+
+/* 标签样式 - 确保这些样式被正确应用 */
+.tag-saas, .tag-cloud, .tag-enterprise, .tag-collab, .tag-crm, .tag-ai, .tag-method {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: 9999px;
+    white-space: nowrap;
+}
+
+.tag-saas {
+    background-color: #e0e7ff;
+    color: #4338ca;
+}
+
+.tag-cloud {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.tag-enterprise {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.tag-collab {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.tag-crm {
+    background-color: #ffedd5;
+    color: #c2410c;
+}
+
+.tag-ai {
+    background-color: #f3e8ff;
+    color: #7e22ce;
+}
+
+.tag-method {
+    background-color: #cffafe;
+    color: #0e7490;
+}
+
+/* 导航栏选中状态 */
+.nav-link-active {
+    color: #1F2937;
+    font-weight: 500;
+    border-bottom: 2px solid #1F2937;
+}
+
+/* 其他自定义样式可以添加在这里 */
