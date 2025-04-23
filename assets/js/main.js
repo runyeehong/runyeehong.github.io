@@ -17,62 +17,15 @@ tailwind.config = {
 
 // 导航栏交互
 document.addEventListener('DOMContentLoaded', function() {
-    // 移动端菜单切换
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    if (mobileMenuButton && mobileMenu) {
-        // 同时支持点击和触摸事件
-        ['click', 'touchend'].forEach(eventType => {
-            mobileMenuButton.addEventListener(eventType, function(e) {
-                // 防止事件冒泡和默认行为
-                e.preventDefault();
-                e.stopPropagation();
-                mobileMenu.classList.toggle('hidden');
-            }, {passive: false});
+ // 更新导航栏选中状态
+ document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', function() {
+        document.querySelectorAll('nav a').forEach(el => {
+            el.classList.remove('nav-link-active');
+            el.classList.add('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
         });
-        
-        // 点击移动端菜单项后自动关闭菜单
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            ['click', 'touchend'].forEach(eventType => {
-                link.addEventListener(eventType, function(e) {
-                    // 触摸事件需要停止冒泡，但允许默认跳转行为
-                    if (eventType === 'touchend') {
-                        e.stopPropagation();
-                    }
-                    mobileMenu.classList.add('hidden');
-                }, {passive: true});
-            });
-        });
-        
-        // 点击或触摸文档其他区域时关闭菜单
-        document.addEventListener('click', function(e) {
-            if (mobileMenu && !mobileMenu.classList.contains('hidden') && 
-                !mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
-                mobileMenu.classList.add('hidden');
-            }
-        });
-        
-        document.addEventListener('touchend', function(e) {
-            if (mobileMenu && !mobileMenu.classList.contains('hidden') && 
-                !mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
-                mobileMenu.classList.add('hidden');
-            }
-        }, {passive: true});
-    }
-    
-    // 只为桌面端导航添加选中态
-    const desktopNav = document.querySelector('.hidden.md\\:flex');
-    if (desktopNav) {
-        desktopNav.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function() {
-                desktopNav.querySelectorAll('a').forEach(el => {
-                    el.classList.remove('nav-link-active');
-                    el.classList.add('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
-                });
-                this.classList.add('nav-link-active');
-                this.classList.remove('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
-            });
-        });
-    }
+        this.classList.add('nav-link-active');
+        this.classList.remove('text-gray-600', 'hover:text-dark', 'pb-1', 'hover:border-b-2', 'hover:border-gray-300');
+    });
+});
 });
