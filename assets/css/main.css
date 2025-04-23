@@ -53,13 +53,7 @@ body {
 .nav-link-active {
     color: #1F2937;
     font-weight: 500;
-}
-
-/* 只在中等屏幕及以上显示底部边框 */
-@media (min-width: 768px) {
-    .nav-link-active {
-        border-bottom: 2px solid #1F2937;
-    }
+    border-bottom: 2px solid #1F2937; 
 }
 
 /* 其他自定义样式可以添加在这里 */
