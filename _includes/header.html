@@ -5,7 +5,7 @@
                 <a href="/" class="text-xl font-bold text-dark">pmrunyee</a>
             </div>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="{% if page.url == '/' %}#home{% else %}/{% endif %}" class="{% if page.url == '/' %}md:nav-link-active text-gray-900 font-medium{% else %}text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300{% endif %}">主页</a>
+                <a href="{% if page.url == '/' %}#home{% else %}/{% endif %}" class="{% if page.url == '/' %}md-nav-link-active{% else %}text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300{% endif %}">主页</a>
                 <a href="{% if page.url == '/' %}#projects{% else %}/#projects{% endif %}" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">作品</a>
                 <a href="{% if page.url == '/' %}#blog{% else %}/#blog{% endif %}" class="text-gray-600 hover:text-dark transition pb-1 hover:border-b-2 hover:border-gray-300">博客</a>
             </div>
@@ -22,9 +22,9 @@
         <!-- 移动端菜单内容 -->
         <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg rounded-b-lg mt-1">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium {% if page.url == '/' %}bg-gray-100 text-black{% else %}text-gray-700 hover:text-black hover:bg-gray-100{% endif %} border-0 outline-none">主页</a>
-                <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0 outline-none">作品</a>
-                <a href="#blog" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0 outline-none">博客</a>
+                <a href="{% if page.url == '/' %}#home{% else %}/{% endif %}" class="block px-3 py-2 rounded-md text-base font-medium {% if page.url == '/' %}bg-gray-100 text-black{% else %}text-gray-700 hover:text-black hover:bg-gray-100{% endif %} border-0">主页</a>
+                <a href="{% if page.url == '/' %}#projects{% else %}/#projects{% endif %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0">作品</a>
+                <a href="{% if page.url == '/' %}#blog{% else %}/#blog{% endif %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0">博客</a>
             </div>
         </div>
     </div>
