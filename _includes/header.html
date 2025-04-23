@@ -22,12 +22,9 @@
         <!-- 移动端菜单内容 -->
         <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg rounded-b-lg mt-1">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="{% if page.url == '/' %}#home{% else %}/{% endif %}" 
-                   class="nav-link {% if page.url == '/' %}nav-link-active{% endif %} text-gray-700">主页</a>
-                <a href="{% if page.url == '/' %}#projects{% else %}/#projects{% endif %}" 
-                   class="nav-link text-gray-700">作品</a>
-                <a href="{% if page.url == '/' %}#blog{% else %}/#blog{% endif %}" 
-                   class="nav-link text-gray-700">博客</a>
+                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0 outline-none">主页</a>
+                    <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0 outline-none">作品</a>
+                    <a href="#blog" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-100 border-0 outline-none">博客</a>
             </div>
         </div>
     </div>
