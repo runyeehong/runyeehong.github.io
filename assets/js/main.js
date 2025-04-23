@@ -22,12 +22,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuButton = document.getElementById('mobile-menu-button');
 
     // 移动端菜单切换
-    mobileMenuButton?.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // 阻止事件冒泡
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 点击页面其他区域关闭菜单
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    }
 
     // 更新导航栏选中状态
     document.querySelectorAll('nav a').forEach(link => {
+        if (link.classList.contains('text-xl')) return; // 跳过 logo 链接
+
         link.addEventListener('click', function(e) {
             const isDesktop = !isMobile();
             
@@ -38,6 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // 更新选中状态
             document.querySelectorAll('nav a').forEach(el => {
+                if (el.classList.contains('text-xl')) return; // 跳过 logo 链接
+                
                 if (isDesktop) {
                     // 桌面端样式
                     el.classList.remove('nav-link-active');
