@@ -25,8 +25,8 @@
     </div>
 
     <!-- 移动端菜单内容 -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
-        <div class="px-2 pt-2 pb-3 space-y-1">
+    <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white shadow-lg">
+        <div class="px-4 pt-2 pb-3 space-y-1">
             <a href="{% if page.url == '/' %}#home{% else %}/{% endif %}" 
                class="nav-link {% if page.url == '/' %}nav-link-active{% endif %} text-gray-700">主页</a>
             <a href="{% if page.url == '/' %}#projects{% else %}/#projects{% endif %}" 

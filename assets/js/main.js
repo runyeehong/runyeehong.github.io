@@ -23,9 +23,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 移动端菜单切换
     if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
+        console.log('Mobile menu elements found'); // 调试日志
+        mobileMenuButton.addEventListener('click', function() {
+            console.log('Menu button clicked'); // 调试日志
             mobileMenu.classList.toggle('hidden');
+            console.log('Menu visibility:', !mobileMenu.classList.contains('hidden')); // 调试日志
         });
+    } else {
+        console.log('Mobile menu elements not found:', { 
+            button: !!mobileMenuButton, 
+            menu: !!mobileMenu 
+        }); // 调试日志
     }
 
     // 更新导航栏选中状态
