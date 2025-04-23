@@ -22,17 +22,17 @@
                 </button>
             </div>
         </div>
-    </div>
-    
-    <!-- 移动端菜单内容 -->
-    <div id="mobile-menu" class="md:hidden hidden">
-        <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
-            <a href="{% if page.url == '/' %}#home{% else %}/{% endif %}" 
-               class="nav-link {% if page.url == '/' %}nav-link-active{% endif %} text-gray-700">主页</a>
-            <a href="{% if page.url == '/' %}#projects{% else %}/#projects{% endif %}" 
-               class="nav-link text-gray-700">作品</a>
-            <a href="{% if page.url == '/' %}#blog{% else %}/#blog{% endif %}" 
-               class="nav-link text-gray-700">博客</a>
+        
+        <!-- 移动端菜单内容 -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg">
+                <a href="{% if page.url == '/' %}#home{% else %}/{% endif %}" 
+                   class="nav-link {% if page.url == '/' %}nav-link-active{% endif %} text-gray-700 block">主页</a>
+                <a href="{% if page.url == '/' %}#projects{% else %}/#projects{% endif %}" 
+                   class="nav-link text-gray-700 block">作品</a>
+                <a href="{% if page.url == '/' %}#blog{% else %}/#blog{% endif %}" 
+                   class="nav-link text-gray-700 block">博客</a>
+            </div>
         </div>
     </div>
 </nav>

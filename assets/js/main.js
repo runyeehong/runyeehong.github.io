@@ -23,16 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 移动端菜单切换
     if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', (e) => {
-            e.stopPropagation(); // 阻止事件冒泡
+        mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
-        });
-
-        // 点击页面其他区域关闭菜单
-        document.addEventListener('click', (e) => {
-            if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
-                mobileMenu.classList.add('hidden');
-            }
         });
     }
 
@@ -40,11 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('nav a').forEach(link => {
         if (link.classList.contains('text-xl')) return; // 跳过 logo 链接
 
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function() {
             const isDesktop = !isMobile();
             
             // 移动端菜单点击后关闭
-            if (!isDesktop && !this.classList.contains('nav-link-active')) {
+            if (!isDesktop) {
                 mobileMenu.classList.add('hidden');
             }
 
