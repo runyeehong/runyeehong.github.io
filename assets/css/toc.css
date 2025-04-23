@@ -1,0 +1,107 @@
+/* 目录样式 */
+.toc-content ul {
+    list-style: none;
+    padding-left: 0;
+    border: none;
+}
+
+.toc-content li {
+    margin-bottom: 0.25rem;
+    border: none;
+}
+
+.toc-content a {
+    display: block;
+    padding: 0.25rem 0.5rem;
+    color: #4B5563;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    transition: all 0.2s;
+}
+
+/* 桌面端目录颜色调浅 */
+.desktop-toc-content a {
+    color: #9CA3AF;
+    display: block;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* 桌面端悬停状态 - 仅改变文字颜色和加粗 */
+.desktop-toc-content a:hover {
+    color: #4B5563;
+    font-weight: 600;
+}
+
+/* 移动端目录悬停状态 */
+#mobile-toc .toc-content a:hover {
+    color: #111827;
+    font-weight: 600;
+    background-color: rgba(17, 24, 39, 0.05);
+}
+
+/* 确保移动端目录项文本完全显示 */
+#mobile-toc .toc-content a {
+    display: block;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* 桌面端选中状态 - 保留背景色 */
+.desktop-toc-content a.text-gray-900 {
+    color: #4B5563;
+    font-weight: 600;
+    background-color: rgba(17, 24, 39, 0.05);
+}
+
+/* 移动端选中状态 */
+#mobile-toc .toc-content a.text-gray-900 {
+    color: #111827;
+    font-weight: 600;
+    background-color: rgba(17, 24, 39, 0.05);
+}
+
+/* 移除下划线样式 */
+.toc-content a.underline {
+    text-decoration: none !important;
+    text-underline-offset: 0;
+}
+
+/* 移动端目录动画 */
+#mobile-toc-container {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* 移动端目录按钮悬浮效果 */
+#mobile-toc-button {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#mobile-toc-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 隐藏滚动条但保留滚动功能 */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* 目录中的文字换行 */
+.break-words {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+/* 移除移动端目录背景遮罩 */
+#mobile-toc {
+    background-color: transparent;
+} 

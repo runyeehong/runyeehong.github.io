@@ -1,0 +1,63 @@
+/* 文章内容样式 */
+.prose {
+    @apply max-w-none text-gray-800;
+}
+
+.prose h1 {
+    @apply text-3xl font-bold text-gray-900 mt-8 mb-4;
+}
+
+.prose h2 {
+    @apply text-2xl font-bold text-gray-900 mt-6 mb-3;
+}
+
+.prose h3 {
+    @apply text-xl font-semibold text-gray-900 mt-5 mb-2;
+}
+
+.prose p {
+    @apply my-4;
+}
+
+.prose ul,
+.prose ol {
+    @apply my-4 pl-6;
+}
+
+.prose li {
+    @apply mb-1;
+}
+
+.prose a {
+    @apply text-blue-600 hover:text-blue-800 underline;
+}
+
+.prose img {
+    @apply max-w-full rounded-lg my-6;
+}
+
+.prose blockquote {
+    @apply border-l-4 border-gray-300 pl-4 italic my-6;
+}
+
+.prose code {
+    @apply bg-gray-100 px-1 py-0.5 rounded text-sm;
+}
+
+.prose pre {
+    @apply bg-gray-800 text-white p-4 rounded-lg overflow-auto my-6;
+}
+
+.prose pre code {
+    @apply bg-transparent text-white p-0;
+}
+
+/* 为标题添加滚动偏移量，防止被导航栏遮挡 */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+    scroll-margin-top: calc(64px + 24px); /* 导航栏高度 + 额外边距 */
+} 
