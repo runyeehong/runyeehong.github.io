@@ -158,3 +158,64 @@ layout: default
         </div>
     </div>
 </section>
+
+<style>
+    /* 添加后台入口样式 */
+    .admin-entry {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 1000;
+    }
+    .admin-entry:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    .admin-entry.show {
+        opacity: 1;
+    }
+</style>
+
+<body>
+    <!-- 在body开始处添加后台入口 -->
+    <div class="admin-entry" id="adminEntry">
+        <a href="cms/admin/templates/login.html" style="color: white; text-decoration: none;">进入后台</a>
+    </div>
+
+    <!-- 在body结束前添加脚本 -->
+    <script>
+        const adminEntry = document.getElementById('adminEntry');
+        let keySequence = '';
+        const secretCode = 'admin';
+
+        // 监听键盘输入
+        document.addEventListener('keydown', (e) => {
+            keySequence += e.key.toLowerCase();
+            if (keySequence.length > secretCode.length) {
+                keySequence = keySequence.slice(-secretCode.length);
+            }
+            if (keySequence === secretCode) {
+                adminEntry.classList.add('show');
+                setTimeout(() => {
+                    adminEntry.classList.remove('show');
+                }, 3000);
+            }
+        });
+
+        // 监听特定位置的点击（右下角）
+        document.addEventListener('click', (e) => {
+            if (e.clientX > window.innerWidth - 50 && e.clientY > window.innerHeight - 50) {
+                adminEntry.classList.add('show');
+                setTimeout(() => {
+                    adminEntry.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
