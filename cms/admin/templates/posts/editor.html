@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章编辑器 - CMS 后台管理</title>
+    <!-- 引入 Prism.js 代码高亮 -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet">
+    <!-- 引入 KaTeX 数学公式支持 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav {
+            display: flex;
+            gap: 1rem;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        .nav a:hover {
+            background-color: #555;
+        }
+        .editor-container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+        .toolbar {
+            width: 60px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            padding: 1rem 0;
+        }
+        .toolbar-button {
+            width: 40px;
+            height: 40px;
+            margin: 0.5rem auto;
+            display: block;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .toolbar-button:hover {
+            background-color: #f0f0f0;
+        }
+        .editor-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .editor-toolbar {
+            padding: 0.5rem;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .editor-content {
+            flex: 1;
+            padding: 1rem;
+            background-color: #fff;
+            overflow-y: auto;
+        }
+        .editor-preview {
+            flex: 1;
+            padding: 1rem;
+            background-color: #fff;
+            overflow-y: auto;
+            display: none;
+        }
+        .editor-mode {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .mode-button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .mode-button.active {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        #editor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .image-gallery {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .gallery-column {
+            flex: 1;
+            min-width: 0;
+        }
+        .gallery-image {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+        .gallery-caption {
+            margin-top: 0.5rem;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .notice {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #6c757d;
+        }
+        .notice.info {
+            background-color: #e7f5ff;
+            border-left-color: #228be6;
+        }
+        .notice.warning {
+            background-color: #fff3bf;
+            border-left-color: #f08c00;
+        }
+        .notice.danger {
+            background-color: #ffe3e3;
+            border-left-color: #fa5252;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>文章编辑器</h1>
+        <nav class="nav">
+            <a href="../dashboard.html">返回首页</a>
+            <a href="#" id="save-button">保存</a>
+            <a href="#" id="preview-button">预览</a>
+        </nav>
+    </div>
+
+    <div class="editor-container">
+        <div class="toolbar">
+            <button class="toolbar-button" title="标题" onclick="insertText('# ')" data-command="h1">H1</button>
+            <button class="toolbar-button" title="粗体" onclick="insertText('**text**')" data-command="bold">B</button>
+            <button class="toolbar-button" title="斜体" onclick="insertText('*text*')" data-command="italic">I</button>
+            <button class="toolbar-button" title="链接" onclick="insertText('[text](url)')" data-command="link">🔗</button>
+            <button class="toolbar-button" title="图片" onclick="insertText('![alt](url)')" data-command="image">🖼️</button>
+            <button class="toolbar-button" title="代码块" onclick="insertText('```\ncode\n```')" data-command="code">📝</button>
+            <button class="toolbar-button" title="表格" onclick="insertTable()" data-command="table">📊</button>
+            <button class="toolbar-button" title="图片画廊" onclick="insertImageGallery()" data-command="gallery">🎨</button>
+            <button class="toolbar-button" title="通知框" onclick="insertNotice()" data-command="notice">📢</button>
+            <button class="toolbar-button" title="数学公式" onclick="insertText('$$formula$$')" data-command="math">∑</button>
+        </div>
+
+        <div class="editor-area">
+            <div class="editor-mode">
+                <button class="mode-button active" data-mode="edit">编辑模式</button>
+                <button class="mode-button" data-mode="preview">预览模式</button>
+            </div>
+            <div class="editor-content">
+                <textarea id="editor" placeholder="开始写作..."></textarea>
+            </div>
+            <div class="editor-preview" id="preview"></div>
+        </div>
+    </div>
+
+    <!-- 引入必要的 JavaScript 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        // 检查登录状态
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = '../login.html';
+        }
+
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+        const modeButtons = document.querySelectorAll('.mode-button');
+        const saveButton = document.getElementById('save-button');
+        const previewButton = document.getElementById('preview-button');
+
+        // 编辑器功能函数
+        function insertText(text) {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const selectedText = editor.value.substring(start, end);
+            const newText = text.replace('text', selectedText);
+            editor.value = editor.value.substring(0, start) + newText + editor.value.substring(end);
+            editor.focus();
+            editor.setSelectionRange(start, start + newText.length);
+        }
+
+        function insertTable() {
+            const table = `| 标题1 | 标题2 | 标题3 |
+|-------|-------|-------|
+| 内容1 | 内容2 | 内容3 |
+| 内容4 | 内容5 | 内容6 |`;
+            insertText(table);
+        }
+
+        function insertImageGallery() {
+            const gallery = `@[image-gallery]
+| 图片1 | 图片2 | 图片3 |
+|-------|-------|-------|
+| ![图片1](url1) | ![图片2](url2) | ![图片3](url3) |
+| 说明1 | 说明2 | 说明3 |`;
+            insertText(gallery);
+        }
+
+        function insertNotice() {
+            const notice = `@[notice]
+这是一条通知消息`;
+            insertText(notice);
+        }
+
+        // 模式切换
+        modeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                if (button.dataset.mode === 'edit') {
+                    document.querySelector('.editor-content').style.display = 'block';
+                    document.querySelector('.editor-preview').style.display = 'none';
+                } else {
+                    document.querySelector('.editor-content').style.display = 'none';
+                    document.querySelector('.editor-preview').style.display = 'block';
+                    updatePreview();
+                }
+            });
+        });
+
+        // 更新预览
+        function updatePreview() {
+            let content = editor.value;
+            
+            // 处理图片画廊
+            content = content.replace(/@\[image-gallery\]([\s\S]*?)(?=@\[|\n\n|$)/g, (match, galleryContent) => {
+                const rows = galleryContent.trim().split('\n');
+                let html = '<div class="image-gallery">';
+                rows.forEach(row => {
+                    if (row.startsWith('|')) {
+                        const cells = row.split('|').filter(cell => cell.trim());
+                        cells.forEach(cell => {
+                            html += `<div class="gallery-column">
+                                <img src="${cell.match(/!\[.*?\]\((.*?)\)/)?.[1] || ''}" class="gallery-image">
+                                <div class="gallery-caption">${cell.match(/!\[(.*?)\]/)?.[1] || ''}</div>
+                            </div>`;
+                        });
+                    }
+                });
+                html += '</div>';
+                return html;
+            });
+
+            // 处理通知框
+            content = content.replace(/@\[notice\]\n([\s\S]*?)(?=@\[|\n\n|$)/g, (match, noticeContent) => {
+                return `<div class="notice">${marked.parse(noticeContent.trim())}</div>`;
+            });
+
+            // 渲染 Markdown
+            preview.innerHTML = marked.parse(content);
+
+            // 渲染数学公式
+            renderMathInElement(preview, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+
+            // 高亮代码块
+            Prism.highlightAll();
+        }
+
+        // 自动保存
+        let saveTimeout;
+        editor.addEventListener('input', () => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem('draft', editor.value);
+            }, 1000);
+        });
+
+        // 加载草稿
+        const draft = localStorage.getItem('draft');
+        if (draft) {
+            editor.value = draft;
+        }
+
+        // 保存按钮
+        saveButton.addEventListener('click', () => {
+            // TODO: 实现保存功能
+            alert('保存成功！');
+        });
+
+        // 预览按钮
+        previewButton.addEventListener('click', () => {
+            const previewMode = document.querySelector('[data-mode="preview"]');
+            previewMode.click();
+        });
+    </script>
+</body>
+</html> 
